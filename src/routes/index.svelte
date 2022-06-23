@@ -3,16 +3,215 @@
 </script>
 
 <script>
-	import '../app.css';
-  // import Counter from '$lib/Counter.svelte';
+  import "../app.css";
+  import swURL from "$lib/sw.js?url";
+  import { onMount } from "svelte";
+  import * as THREE from "three";
+
+  import { Editor } from "$lib/js/Editor.js";
+  import { Viewport } from "$lib/js/Viewport.js";
+  import { Toolbar } from "$lib/js/Toolbar.js";
+  import { Script } from "$lib/js/Script.js";
+  import { Player } from "$lib/js/Player.js";
+  import { Sidebar } from "$lib/js/Sidebar.js";
+  import { Menubar } from "$lib/js/Menubar.js";
+  import { Resizer } from "$lib/js/Resizer.js";
+
+  onMount(async () => {
+    window.URL = window.URL || window.webkitURL;
+    window.BlobBuilder =
+      window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+
+    Number.prototype.format = function () {
+      return this.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    };
+
+    //
+
+    const editor = new Editor();
+
+    window.editor = editor; // Expose editor to Console
+    window.THREE = THREE; // Expose THREE to APP Scripts and Console
+
+    const viewport = Viewport(editor);
+    document.body.appendChild(viewport.dom);
+
+    const toolbar = Toolbar(editor);
+    document.body.appendChild(toolbar.dom);
+
+    const script = Script(editor);
+    document.body.appendChild(script.dom);
+
+    const player = Player(editor);
+    document.body.appendChild(player.dom);
+
+    const sidebar = Sidebar(editor);
+    document.body.appendChild(sidebar.dom);
+
+    const menubar = Menubar(editor);
+    document.body.appendChild(menubar.dom);
+
+    const resizer = Resizer(editor);
+    document.body.appendChild(resizer.dom);
+
+    //
+
+    editor.storage.init(function () {
+      editor.storage.get(function (state) {
+        if (isLoadingFromHash) return;
+
+        if (state !== undefined) {
+          editor.fromJSON(state);
+        }
+
+        const selected = editor.config.getKey("selected");
+
+        if (selected !== undefined) {
+          editor.selectByUuid(selected);
+        }
+      });
+
+      //
+
+      let timeout;
+
+      function saveState() {
+        if (editor.config.getKey("autosave") === false) {
+          return;
+        }
+
+        clearTimeout(timeout);
+
+        timeout = setTimeout(function () {
+          editor.signals.savingStarted.dispatch();
+
+          timeout = setTimeout(function () {
+            editor.storage.set(editor.toJSON());
+
+            editor.signals.savingFinished.dispatch();
+          }, 100);
+        }, 1000);
+      }
+
+      const signals = editor.signals;
+
+      signals.geometryChanged.add(saveState);
+      signals.objectAdded.add(saveState);
+      signals.objectChanged.add(saveState);
+      signals.objectRemoved.add(saveState);
+      signals.materialChanged.add(saveState);
+      signals.sceneBackgroundChanged.add(saveState);
+      signals.sceneEnvironmentChanged.add(saveState);
+      signals.sceneFogChanged.add(saveState);
+      signals.sceneGraphChanged.add(saveState);
+      signals.scriptChanged.add(saveState);
+      signals.historyChanged.add(saveState);
+    });
+
+    //
+
+    document.addEventListener("dragover", function (event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "copy";
+    });
+
+    document.addEventListener("drop", function (event) {
+      event.preventDefault();
+
+      if (event.dataTransfer.types[0] === "text/plain") return; // Outliner drop
+
+      if (event.dataTransfer.items) {
+        // DataTransferItemList supports folders
+
+        editor.loader.loadItemList(event.dataTransfer.items);
+      } else {
+        editor.loader.loadFiles(event.dataTransfer.files);
+      }
+    });
+
+    function onWindowResize() {
+      editor.signals.windowResize.dispatch();
+    }
+
+    window.addEventListener("resize", onWindowResize);
+
+    onWindowResize();
+
+    //
+
+    let isLoadingFromHash = false;
+    const hash = window.location.hash;
+
+    if (hash.slice(1, 6) === "file=") {
+      const file = hash.slice(6);
+
+      if (confirm("Any unsaved data will be lost. Are you sure?")) {
+        const loader = new THREE.FileLoader();
+        loader.crossOrigin = "";
+        loader.load(file, function (text) {
+          editor.clear();
+          editor.fromJSON(JSON.parse(text));
+        });
+
+        isLoadingFromHash = true;
+      }
+    }
+
+    // ServiceWorker
+
+    if ("serviceWorker" in navigator) {
+      try {
+        navigator.serviceWorker.register(swURL, {type:"module"});
+      } catch (error) {}
+    }
+  });
 </script>
 
 <svelte:head>
-  <title>Home</title>
+  <title>three.js editor</title>
   <meta name="description" content="A SvelteKit app" />
-</svelte:head>
+  <!-- <link rel="apple-touch-icon" href="images/icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link
+    rel="shortcut icon"
+    href="../files/favicon_white.ico"
+    media="(prefers-color-scheme: dark)" />
+  <link
+    rel="shortcut icon"
+    href="../files/favicon.ico"
+    media="(prefers-color-scheme: light)" />
+  <script
+    src="https://unpkg.com/@ffmpeg/ffmpeg@0.9.6/dist/ffmpeg.min.js"
+    defer></script>
 
-<p class="border-2 border-blue-200 bg-slate-300 text-center text-2xl">
-  hello world
-</p>
-<p>asdgfasg</p>
+  <script src="three/examples/js/libs/draco/draco_encoder.js"></script> -->
+
+  <!-- <link rel="stylesheet" href="js/libs/codemirror/codemirror.css" />
+  <link rel="stylesheet" href="js/libs/codemirror/theme/monokai.css" />
+  <script src="js/libs/codemirror/codemirror.js"></script>
+  <script src="js/libs/codemirror/mode/javascript.js"></script>
+  <script src="js/libs/codemirror/mode/glsl.js"></script>
+
+  <script src="js/libs/esprima.js"></script>
+  <script src="js/libs/jsonlint.js"></script>
+
+  <link rel="stylesheet" href="js/libs/codemirror/addon/dialog.css" />
+  <link rel="stylesheet" href="js/libs/codemirror/addon/show-hint.css" />
+  <link rel="stylesheet" href="js/libs/codemirror/addon/tern.css" />
+
+  <script src="js/libs/codemirror/addon/dialog.js"></script>
+  <script src="js/libs/codemirror/addon/show-hint.js"></script>
+  <script src="js/libs/codemirror/addon/tern.js"></script> -->
+  <!-- <script src="js/libs/acorn/acorn.js"></script>
+  <script src="js/libs/acorn/acorn_loose.js"></script>
+  <script src="js/libs/acorn/walk.js"></script>
+  <script src="js/libs/ternjs/polyfill.js"></script>
+  <script src="js/libs/ternjs/signal.js"></script>
+  <script src="js/libs/ternjs/tern.js"></script>
+  <script src="js/libs/ternjs/def.js"></script>
+  <script src="js/libs/ternjs/comment.js"></script>
+  <script src="js/libs/ternjs/infer.js"></script>
+  <script src="js/libs/ternjs/doc_comment.js"></script>
+  <script src="js/libs/tern-threejs/threejs.js"></script>
+  <script src="js/libs/signals.min.js"></script> -->
+</svelte:head>
