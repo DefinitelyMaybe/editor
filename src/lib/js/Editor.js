@@ -24,8 +24,8 @@ class Signal {
   }
 }
 
-function Editor() {
-  this.signals = {
+export class Editor {
+  signals = {
     // script
 
     editScript: new Signal(),
@@ -96,41 +96,41 @@ function Editor() {
     viewportCameraChanged: new Signal(),
   };
 
-  this.config = new Config();
-  this.history = new _History(this);
-  this.storage = new _Storage();
-  this.strings = new Strings(this.config);
+  config = new Config();
+  history = new _History(this);
+  storage = new _Storage();
+  strings = new Strings(this.config);
 
-  this.loader = new Loader(this);
+  loader = new Loader(this);
 
-  this.camera = _DEFAULT_CAMERA.clone();
+  camera = _DEFAULT_CAMERA.clone();
 
-  this.scene = new THREE.Scene();
-  this.scene.name = "Scene";
+  scene = new THREE.Scene();
 
-  this.sceneHelpers = new THREE.Scene();
+  sceneHelpers = new THREE.Scene();
 
-  this.object = {};
-  this.geometries = {};
-  this.materials = {};
-  this.textures = {};
-  this.scripts = {};
+  object = {};
+  geometries = {};
+  materials = {};
+  textures = {};
+  scripts = {};
 
-  this.materialsRefCounter = new Map(); // tracks how often is a material used by a 3D object
+  materialsRefCounter = new Map(); // tracks how often is a material used by a 3D object
 
-  this.mixer = new THREE.AnimationMixer(this.scene);
+  mixer = new THREE.AnimationMixer(this.scene);
 
-  this.selected = null;
-  this.helpers = {};
+  selected = null;
+  helpers = {};
 
-  this.cameras = {};
-  this.viewportCamera = this.camera;
+  cameras = {};
+  viewportCamera = this.camera;
 
-  this.addCamera(this.camera);
-}
+  constructor() {
+    this.scene.name = "Scene";
+    this.addCamera(this.camera);
+  }
 
-Editor.prototype = {
-  setScene: function (scene) {
+  setScene (scene) {
     this.scene.uuid = scene.uuid;
     this.scene.name = scene.name;
 
@@ -150,11 +150,11 @@ Editor.prototype = {
 
     this.signals.sceneGraphChanged.active = true;
     this.signals.sceneGraphChanged.dispatch();
-  },
+  }
 
   //
 
-  addObject: function (object, parent, index) {
+  addObject (object, parent, index) {
     var scope = this;
 
     object.traverse(function (child) {
@@ -174,9 +174,9 @@ Editor.prototype = {
 
     this.signals.objectAdded.dispatch(object);
     this.signals.sceneGraphChanged.dispatch();
-  },
+  }
 
-  moveObject: function (object, parent, before) {
+  moveObject (object, parent, before) {
     if (parent === undefined) {
       parent = this.scene;
     }
@@ -192,14 +192,14 @@ Editor.prototype = {
     }
 
     this.signals.sceneGraphChanged.dispatch();
-  },
+  }
 
-  nameObject: function (object, name) {
+  nameObject (object, name) {
     object.name = name;
     this.signals.sceneGraphChanged.dispatch();
-  },
+  }
 
-  removeObject: function (object) {
+  removeObject (object) {
     if (object.parent === null) return; // avoid deleting the camera or scene
 
     var scope = this;
@@ -215,18 +215,18 @@ Editor.prototype = {
 
     this.signals.objectRemoved.dispatch(object);
     this.signals.sceneGraphChanged.dispatch();
-  },
+  }
 
-  addGeometry: function (geometry) {
+  addGeometry (geometry) {
     this.geometries[geometry.uuid] = geometry;
-  },
+  }
 
-  setGeometryName: function (geometry, name) {
+  setGeometryName (geometry, name) {
     geometry.name = name;
     this.signals.sceneGraphChanged.dispatch();
-  },
+  }
 
-  addMaterial: function (material) {
+  addMaterial (material) {
     if (Array.isArray(material)) {
       for (var i = 0, l = material.length; i < l; i++) {
         this.addMaterialToRefCounter(material[i]);
@@ -236,9 +236,9 @@ Editor.prototype = {
     }
 
     this.signals.materialAdded.dispatch();
-  },
+  }
 
-  addMaterialToRefCounter: function (material) {
+  addMaterialToRefCounter (material) {
     var materialsRefCounter = this.materialsRefCounter;
 
     var count = materialsRefCounter.get(material);
@@ -250,9 +250,9 @@ Editor.prototype = {
       count++;
       materialsRefCounter.set(material, count);
     }
-  },
+  }
 
-  removeMaterial: function (material) {
+  removeMaterial (material) {
     if (Array.isArray(material)) {
       for (var i = 0, l = material.length; i < l; i++) {
         this.removeMaterialFromRefCounter(material[i]);
@@ -262,9 +262,9 @@ Editor.prototype = {
     }
 
     this.signals.materialRemoved.dispatch();
-  },
+  }
 
-  removeMaterialFromRefCounter: function (material) {
+  removeMaterialFromRefCounter (material) {
     var materialsRefCounter = this.materialsRefCounter;
 
     var count = materialsRefCounter.get(material);
@@ -276,9 +276,9 @@ Editor.prototype = {
     } else {
       materialsRefCounter.set(material, count);
     }
-  },
+  }
 
-  getMaterialById: function (id) {
+  getMaterialById (id) {
     var material;
     var materials = Object.values(this.materials);
 
@@ -290,38 +290,38 @@ Editor.prototype = {
     }
 
     return material;
-  },
+  }
 
-  setMaterialName: function (material, name) {
+  setMaterialName (material, name) {
     material.name = name;
     this.signals.sceneGraphChanged.dispatch();
-  },
+  }
 
-  addTexture: function (texture) {
+  addTexture (texture) {
     this.textures[texture.uuid] = texture;
-  },
+  }
 
   //
 
-  addCamera: function (camera) {
+  addCamera (camera) {
     if (camera.isCamera) {
       this.cameras[camera.uuid] = camera;
 
       this.signals.cameraAdded.dispatch(camera);
     }
-  },
+  }
 
-  removeCamera: function (camera) {
+  removeCamera (camera) {
     if (this.cameras[camera.uuid] !== undefined) {
       delete this.cameras[camera.uuid];
 
       this.signals.cameraRemoved.dispatch(camera);
     }
-  },
+  }
 
   //
 
-  addHelper: (function () {
+  addHelper() {
     var geometry = new THREE.SphereGeometry(2, 4, 2);
     var material = new THREE.MeshBasicMaterial({
       color: 0xff0000,
@@ -360,9 +360,9 @@ Editor.prototype = {
 
       this.signals.helperAdded.dispatch(helper);
     };
-  })(),
+  }
 
-  removeHelper: function (object) {
+  removeHelper (object) {
     if (this.helpers[object.id] !== undefined) {
       var helper = this.helpers[object.id];
       helper.parent.remove(helper);
@@ -371,11 +371,11 @@ Editor.prototype = {
 
       this.signals.helperRemoved.dispatch(helper);
     }
-  },
+  }
 
   //
 
-  addScript: function (object, script) {
+  addScript (object, script) {
     if (this.scripts[object.uuid] === undefined) {
       this.scripts[object.uuid] = [];
     }
@@ -383,9 +383,9 @@ Editor.prototype = {
     this.scripts[object.uuid].push(script);
 
     this.signals.scriptAdded.dispatch(script);
-  },
+  }
 
-  removeScript: function (object, script) {
+  removeScript (object, script) {
     if (this.scripts[object.uuid] === undefined) return;
 
     var index = this.scripts[object.uuid].indexOf(script);
@@ -395,9 +395,9 @@ Editor.prototype = {
     }
 
     this.signals.scriptRemoved.dispatch(script);
-  },
+  }
 
-  getObjectMaterial: function (object, slot) {
+  getObjectMaterial (object, slot) {
     var material = object.material;
 
     if (Array.isArray(material) && slot !== undefined) {
@@ -405,24 +405,24 @@ Editor.prototype = {
     }
 
     return material;
-  },
+  }
 
-  setObjectMaterial: function (object, slot, newMaterial) {
+  setObjectMaterial (object, slot, newMaterial) {
     if (Array.isArray(object.material) && slot !== undefined) {
       object.material[slot] = newMaterial;
     } else {
       object.material = newMaterial;
     }
-  },
+  }
 
-  setViewportCamera: function (uuid) {
+  setViewportCamera (uuid) {
     this.viewportCamera = this.cameras[uuid];
     this.signals.viewportCameraChanged.dispatch();
-  },
+  }
 
   //
 
-  select: function (object) {
+  select (object) {
     if (this.selected === object) return;
 
     var uuid = null;
@@ -435,18 +435,18 @@ Editor.prototype = {
 
     this.config.setKey("selected", uuid);
     this.signals.objectSelected.dispatch(object);
-  },
+  }
 
-  selectById: function (id) {
+  selectById (id) {
     if (id === this.camera.id) {
       this.select(this.camera);
       return;
     }
 
     this.select(this.scene.getObjectById(id));
-  },
+  }
 
-  selectByUuid: function (uuid) {
+  selectByUuid (uuid) {
     var scope = this;
 
     this.scene.traverse(function (child) {
@@ -454,23 +454,23 @@ Editor.prototype = {
         scope.select(child);
       }
     });
-  },
+  }
 
-  deselect: function () {
+  deselect () {
     this.select(null);
-  },
+  }
 
-  focus: function (object) {
+  focus (object) {
     if (object !== undefined) {
       this.signals.objectFocused.dispatch(object);
     }
-  },
+  }
 
-  focusById: function (id) {
+  focusById (id) {
     this.focus(this.scene.getObjectById(id));
-  },
+  }
 
-  clear: function () {
+  clear () {
     this.history.clear();
     this.storage.clear();
 
@@ -502,11 +502,11 @@ Editor.prototype = {
     this.deselect();
 
     this.signals.editorCleared.dispatch();
-  },
+  }
 
   //
 
-  fromJSON: async function (json) {
+  async fromJSON (json) {
     var loader = new THREE.ObjectLoader();
     var camera = await loader.parseAsync(json.camera);
 
@@ -517,9 +517,9 @@ Editor.prototype = {
     this.scripts = json.scripts;
 
     this.setScene(await loader.parseAsync(json.scene));
-  },
+  }
 
-  toJSON: function () {
+  toJSON () {
     // scripts clean up
 
     var scene = this.scene;
@@ -557,23 +557,21 @@ Editor.prototype = {
       scripts: this.scripts,
       history: this.history.toJSON(),
     };
-  },
+  }
 
-  objectByUuid: function (uuid) {
+  objectByUuid (uuid) {
     return this.scene.getObjectByProperty("uuid", uuid, true);
-  },
+  }
 
-  execute: function (cmd, optionalName) {
+  execute (cmd, optionalName) {
     this.history.execute(cmd, optionalName);
-  },
+  }
 
-  undo: function () {
+  undo () {
     this.history.undo();
-  },
+  }
 
-  redo: function () {
+  redo () {
     this.history.redo();
-  },
-};
-
-export { Editor };
+  }
+}
