@@ -18,12 +18,12 @@ class Signal {
     this.name = name
   }
   add(fn) {
-    console.info(`${this.name} signal adding new function:`);
-    console.info(fn);
+    // console.info(`${this.name} signal adding new function:`);
+    // console.info(fn);
     this.funcs.push(fn);
   }
   dispatch(args) {
-    console.info(`${this.name} signal dispatching`);
+    // console.info(`${this.name} signal dispatching`);
     this.funcs.forEach((fn) => {
       fn(args);
     });
