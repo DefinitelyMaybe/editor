@@ -18,8 +18,6 @@
   import { Menubar } from "$lib/js/Menubar.js";
   import { Resizer } from "$lib/js/Resizer.js";
 
-  console.log("hello world");
-
   onMount(async () => {
     window.URL = window.URL || window.webkitURL;
     window.BlobBuilder =
