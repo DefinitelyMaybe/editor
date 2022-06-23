@@ -15,9 +15,12 @@ _DEFAULT_CAMERA.lookAt(new THREE.Vector3());
 class Signal {
   funcs = [];
   add(fn) {
+    console.info("Signal adding new function:");
+    console.info(fn);
     this.funcs.push(fn);
   }
   dispatch(args) {
+    console.info("Signal dispatching");
     this.funcs.forEach((fn) => {
       fn(args);
     });
