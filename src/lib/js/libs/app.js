@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
+// import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
 var APP = {
   Player: function () {
@@ -10,7 +10,7 @@ var APP = {
     var loader = new THREE.ObjectLoader();
     var camera, scene;
 
-    var vrButton = VRButton.createButton(renderer); // eslint-disable-line no-undef
+    // var vrButton = VRButton.createButton(renderer); // eslint-disable-line no-undef
 
     var events = {};
 
@@ -151,7 +151,7 @@ var APP = {
     }
 
     this.play = function () {
-      if (renderer.xr.enabled) dom.append(vrButton);
+      // if (renderer.xr.enabled) dom.append(vrButton);
 
       startTime = prevTime = performance.now();
 
@@ -167,7 +167,7 @@ var APP = {
     };
 
     this.stop = function () {
-      if (renderer.xr.enabled) vrButton.remove();
+      // if (renderer.xr.enabled) vrButton.remove();
 
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("keyup", onKeyUp);
