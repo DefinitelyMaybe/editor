@@ -14,13 +14,16 @@ _DEFAULT_CAMERA.lookAt(new THREE.Vector3());
 // was: 	var Signal = signals.Signal;
 class Signal {
   funcs = [];
+  constructor(name) {
+    this.name = name
+  }
   add(fn) {
-    console.info("Signal adding new function:");
+    console.info(`${this.name} signal adding new function:`);
     console.info(fn);
     this.funcs.push(fn);
   }
   dispatch(args) {
-    console.info("Signal dispatching");
+    console.info(`${this.name} signal dispatching`);
     this.funcs.forEach((fn) => {
       fn(args);
     });
@@ -31,72 +34,72 @@ export class Editor {
   signals = {
     // script
 
-    editScript: new Signal(),
+    editScript: new Signal("editScript"),
 
     // player
 
-    startPlayer: new Signal(),
-    stopPlayer: new Signal(),
+    startPlayer: new Signal("startPlayer"),
+    stopPlayer: new Signal("stopPlayer"),
 
     // vr
 
-    toggleVR: new Signal(),
-    exitedVR: new Signal(),
+    toggleVR: new Signal("toggleVR"),
+    exitedVR: new Signal("exitedVR"),
 
     // notifications
 
-    editorCleared: new Signal(),
+    editorCleared: new Signal("editorCleared"),
 
-    savingStarted: new Signal(),
-    savingFinished: new Signal(),
+    savingStarted: new Signal("savingStarted"),
+    savingFinished: new Signal("savingFinished"),
 
-    transformModeChanged: new Signal(),
-    snapChanged: new Signal(),
-    spaceChanged: new Signal(),
-    rendererCreated: new Signal(),
-    rendererUpdated: new Signal(),
+    transformModeChanged: new Signal("transformModeChanged"),
+    snapChanged: new Signal("snapChanged"),
+    spaceChanged: new Signal("spaceChanged"),
+    rendererCreated: new Signal("rendererCreated"),
+    rendererUpdated: new Signal("rendererUpdated"),
 
-    sceneBackgroundChanged: new Signal(),
-    sceneEnvironmentChanged: new Signal(),
-    sceneFogChanged: new Signal(),
-    sceneFogSettingsChanged: new Signal(),
-    sceneGraphChanged: new Signal(),
-    sceneRendered: new Signal(),
+    sceneBackgroundChanged: new Signal("sceneBackgroundChanged"),
+    sceneEnvironmentChanged: new Signal("sceneEnvironmentChanged"),
+    sceneFogChanged: new Signal("sceneFogChanged"),
+    sceneFogSettingsChanged: new Signal("sceneFogSettingsChanged"),
+    sceneGraphChanged: new Signal("sceneGraphChanged"),
+    sceneRendered: new Signal("sceneRendered"),
 
-    cameraChanged: new Signal(),
-    cameraResetted: new Signal(),
+    cameraChanged: new Signal("cameraChanged"),
+    cameraResetted: new Signal("cameraResetted"),
 
-    geometryChanged: new Signal(),
+    geometryChanged: new Signal("geometryChanged"),
 
-    objectSelected: new Signal(),
-    objectFocused: new Signal(),
+    objectSelected: new Signal("objectSelected"),
+    objectFocused: new Signal("objectFocused"),
 
-    objectAdded: new Signal(),
-    objectChanged: new Signal(),
-    objectRemoved: new Signal(),
+    objectAdded: new Signal("objectAdded"),
+    objectChanged: new Signal("objectChanged"),
+    objectRemoved: new Signal("objectRemoved"),
 
-    cameraAdded: new Signal(),
-    cameraRemoved: new Signal(),
+    cameraAdded: new Signal("cameraAdded"),
+    cameraRemoved: new Signal("cameraRemoved"),
 
-    helperAdded: new Signal(),
-    helperRemoved: new Signal(),
+    helperAdded: new Signal("helperAdded"),
+    helperRemoved: new Signal("helperRemoved"),
 
-    materialAdded: new Signal(),
-    materialChanged: new Signal(),
-    materialRemoved: new Signal(),
+    materialAdded: new Signal("materialAdded"),
+    materialChanged: new Signal("materialChanged"),
+    materialRemoved: new Signal("materialRemoved"),
 
-    scriptAdded: new Signal(),
-    scriptChanged: new Signal(),
-    scriptRemoved: new Signal(),
+    scriptAdded: new Signal("scriptAdded"),
+    scriptChanged: new Signal("scriptChanged"),
+    scriptRemoved: new Signal("scriptRemoved"),
 
-    windowResize: new Signal(),
+    windowResize: new Signal("windowResize"),
 
-    showGridChanged: new Signal(),
-    showHelpersChanged: new Signal(),
-    refreshSidebarObject3D: new Signal(),
-    historyChanged: new Signal(),
+    showGridChanged: new Signal("showGridChanged"),
+    showHelpersChanged: new Signal("showHelpersChanged"),
+    refreshSidebarObject3D: new Signal("refreshSidebarObject3D"),
+    historyChanged: new Signal("historyChanged"),
 
-    viewportCameraChanged: new Signal(),
+    viewportCameraChanged: new Signal("viewportCameraChanged"),
   };
 
   config = new Config();
