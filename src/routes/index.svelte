@@ -12,7 +12,7 @@
   import { Editor } from "$lib/js/Editor.js";
   import { Viewport } from "$lib/js/Viewport.js";
   import { Toolbar } from "$lib/js/Toolbar.js";
-  import { Script } from "$lib/js/Script.js";
+  // import { Script } from "$lib/js/Script.js";
   import { Player } from "$lib/js/Player.js";
   import { Sidebar } from "$lib/js/Sidebar.js";
   import { Menubar } from "$lib/js/Menubar.js";
@@ -40,8 +40,8 @@
     const toolbar = Toolbar(editor);
     document.body.appendChild(toolbar.dom);
 
-    const script = Script(editor);
-    document.body.appendChild(script.dom);
+    // const script = Script(editor);
+    // document.body.appendChild(script.dom);
 
     const player = Player(editor);
     document.body.appendChild(player.dom);
