@@ -176,8 +176,6 @@ function SidebarScene(editor) {
   container.add(backgroundRow);
 
   function onBackgroundChanged() {
-    console.info(backgroundType,
-    backgroundColor.getValue(), backgroundColor.getHexValue());
     signals.sceneBackgroundChanged.dispatch(
       [backgroundType.getValue(),
       backgroundColor.getValue(),
