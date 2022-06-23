@@ -162,13 +162,13 @@
 
     // ServiceWorker
 
-    if (browser) {
-      if ("serviceWorker" in navigator) {
-        try {
-          navigator.serviceWorker.register(swURL, { type: "module" });
-        } catch (error) {}
-      }
-    }
+    // if (browser) {
+    //   if ("serviceWorker" in navigator) {
+    //     try {
+    //       navigator.serviceWorker.register(swURL, { type: "module" });
+    //     } catch (error) {}
+    //   }
+    // }
   });
 </script>
 
