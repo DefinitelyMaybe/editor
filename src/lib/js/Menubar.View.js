@@ -1,3 +1,4 @@
+import { browser } from "$app/env";
 import { UIPanel, UIRow } from "./libs/ui.js";
 
 function MenubarView(editor) {
@@ -39,18 +40,22 @@ function MenubarView(editor) {
 
   // VR (Work in progress)
 
-  if ("xr" in navigator) {
-    navigator.xr.isSessionSupported("immersive-vr").then(function (supported) {
-      if (supported) {
-        const option = new UIRow();
-        option.setClass("option");
-        option.setTextContent("VR");
-        option.onClick(function () {
-          editor.signals.toggleVR.dispatch();
-        });
-        options.add(option);
-      }
-    });
+  if (browser) {
+    if ("xr" in navigator) {
+      navigator.xr.isSessionSupported("immersive-vr").then(
+        function (supported) {
+          if (supported) {
+            const option = new UIRow();
+            option.setClass("option");
+            option.setTextContent("VR");
+            option.onClick(function () {
+              editor.signals.toggleVR.dispatch();
+            });
+            options.add(option);
+          }
+        },
+      );
+    }
   }
 
   return container;
