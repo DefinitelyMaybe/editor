@@ -1,9 +1,6 @@
-# Sveltekit + deno deploy
+# Editor
 
-also includes tailwindcss
-
-for deno deploy, simply run the build script and then point deno deploy at the `build/index.js` script.
-
-- Update as deno deploy has changed and can now run the build step
-
-Helpful link when updating: https://github.com/sveltejs/kit/tree/master/packages/create-svelte/templates/default
+- Creating an logger/debugging what's going on in the editor
+  - No Silent errors!
+- Converting to svelte components
+- Changing to svelte-cubed (one day)
