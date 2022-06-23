@@ -4,10 +4,5 @@ module.exports = {
 		// 'text-blue-100',
 		// {pattern: /text-(red|grey)-(500|800)/}
 	],
-	plugins: [
-		require('@tailwindcss/forms'),
-		require('@tailwindcss/typography'),
-		require('@tailwindcss/aspect-ratio'),
-		require('@tailwindcss/line-clamp')
-	]
+	plugins: []
 };
