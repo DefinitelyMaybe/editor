@@ -1,4 +1,9 @@
 import * as THREE from "three";
+import arkanoidURL from "$lib/examples/arkanoid.app.json?url";
+import cameraURL from "$lib/examples/camera.app.json?url";
+import particlesURL from "$lib/examples/particles.app.json?url";
+import pongURL from "$lib/examples/pong.app.json?url";
+import shadersURL from "$lib/examples/shaders.app.json?url";
 
 import { UIPanel, UIRow } from "./libs/ui.js";
 
@@ -20,11 +25,11 @@ function MenubarExamples(editor) {
   // Examples
 
   const items = [
-    { title: "menubar/examples/Arkanoid", file: "arkanoid.app.json" },
-    { title: "menubar/examples/Camera", file: "camera.app.json" },
-    { title: "menubar/examples/Particles", file: "particles.app.json" },
-    { title: "menubar/examples/Pong", file: "pong.app.json" },
-    { title: "menubar/examples/Shaders", file: "shaders.app.json" },
+    { title: "menubar/examples/Arkanoid", url: arkanoidURL },
+    { title: "menubar/examples/Camera", url: cameraURL },
+    { title: "menubar/examples/Particles", url: particlesURL },
+    { title: "menubar/examples/Pong", url: pongURL },
+    { title: "menubar/examples/Shaders", url: shadersURL },
   ];
 
   const loader = new THREE.FileLoader();
@@ -38,7 +43,7 @@ function MenubarExamples(editor) {
       option.setTextContent(strings.getKey(item.title));
       option.onClick(function () {
         if (confirm("Any unsaved data will be lost. Are you sure?")) {
-          loader.load("examples/" + item.file, function (text) {
+          loader.load(item.url, function (text) {
             editor.clear();
             editor.fromJSON(JSON.parse(text));
           });
