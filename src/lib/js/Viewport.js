@@ -418,11 +418,12 @@ function Viewport(editor) {
   // background
 
   signals.sceneBackgroundChanged.add(function (
-    backgroundType,
-    backgroundColor,
-    backgroundTexture,
-    backgroundEquirectangularTexture
+    args
   ) {
+    const [backgroundType,
+      backgroundColor,
+      backgroundTexture,
+      backgroundEquirectangularTexture] = args
     switch (backgroundType) {
       case "None":
         scene.background = null;
@@ -457,9 +458,10 @@ function Viewport(editor) {
   // environment
 
   signals.sceneEnvironmentChanged.add(function (
-    environmentType,
-    environmentEquirectangularTexture
+    args
   ) {
+    const [environmentType,
+      environmentEquirectangularTexture] = args
     switch (environmentType) {
       case "None":
         scene.environment = null;
@@ -492,12 +494,13 @@ function Viewport(editor) {
   // fog
 
   signals.sceneFogChanged.add(function (
-    fogType,
-    fogColor,
-    fogNear,
-    fogFar,
-    fogDensity
+    args
   ) {
+    const [fogType,
+      fogColor,
+      fogNear,
+      fogFar,
+      fogDensity] = args
     switch (fogType) {
       case "None":
         scene.fog = null;
@@ -514,12 +517,13 @@ function Viewport(editor) {
   });
 
   signals.sceneFogSettingsChanged.add(function (
-    fogType,
-    fogColor,
-    fogNear,
-    fogFar,
-    fogDensity
+    args
   ) {
+    const [ fogType,
+      fogColor,
+      fogNear,
+      fogFar,
+      fogDensity] = args
     switch (fogType) {
       case "Fog":
         scene.fog.color.setHex(fogColor);

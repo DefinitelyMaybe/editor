@@ -176,11 +176,13 @@ function SidebarScene(editor) {
   container.add(backgroundRow);
 
   function onBackgroundChanged() {
+    console.info(backgroundType,
+    backgroundColor.getValue(), backgroundColor.getHexValue());
     signals.sceneBackgroundChanged.dispatch(
-      backgroundType.getValue(),
-      backgroundColor.getHexValue(),
+      [backgroundType.getValue(),
+      backgroundColor.getValue(),
       backgroundTexture.getValue(),
-      backgroundEquirectangularTexture.getValue()
+      backgroundEquirectangularTexture.getValue()]
     );
   }
 
@@ -227,8 +229,8 @@ function SidebarScene(editor) {
 
   function onEnvironmentChanged() {
     signals.sceneEnvironmentChanged.dispatch(
-      environmentType.getValue(),
-      environmentEquirectangularTexture.getValue()
+      [environmentType.getValue(),
+      environmentEquirectangularTexture.getValue()]
     );
   }
 
@@ -245,21 +247,21 @@ function SidebarScene(editor) {
 
   function onFogChanged() {
     signals.sceneFogChanged.dispatch(
-      fogType.getValue(),
+      [fogType.getValue(),
       fogColor.getHexValue(),
       fogNear.getValue(),
       fogFar.getValue(),
-      fogDensity.getValue()
+      fogDensity.getValue()]
     );
   }
 
   function onFogSettingsChanged() {
     signals.sceneFogSettingsChanged.dispatch(
-      fogType.getValue(),
+      [fogType.getValue(),
       fogColor.getHexValue(),
       fogNear.getValue(),
       fogFar.getValue(),
-      fogDensity.getValue()
+      fogDensity.getValue()]
     );
   }
 
