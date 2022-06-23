@@ -4,9 +4,7 @@
 
 <script>
   import "../app.css";
-  import swURL from "$lib/sw.js?url";
   import { onMount } from "svelte";
-  import { browser } from "$app/env";
   import * as THREE from "three";
 
   import { Editor } from "$lib/js/Editor.js";
@@ -18,7 +16,7 @@
   import { Menubar } from "$lib/js/Menubar.js";
   import { Resizer } from "$lib/js/Resizer.js";
 
-  onMount(async () => {
+  onMount(() => {
     window.URL = window.URL || window.webkitURL;
     window.BlobBuilder =
       window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
