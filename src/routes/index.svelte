@@ -6,6 +6,7 @@
   import "../app.css";
   import swURL from "$lib/sw.js?url";
   import { onMount } from "svelte";
+  import { browser } from "$app/env";
   import * as THREE from "three";
 
   import { Editor } from "$lib/js/Editor.js";
@@ -159,10 +160,12 @@
 
     // ServiceWorker
 
-    if ("serviceWorker" in navigator) {
-      try {
-        navigator.serviceWorker.register(swURL, {type:"module"});
-      } catch (error) {}
+    if (browser) {
+      if ("serviceWorker" in navigator) {
+        try {
+          navigator.serviceWorker.register(swURL, { type: "module" });
+        } catch (error) {}
+      }
     }
   });
 </script>

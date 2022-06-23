@@ -1,82 +1,77 @@
-import { UIBreak, UIPanel, UIRow, UIText, UIListbox, UIButton } from './libs/ui.js';
+import {
+  UIBreak,
+  UIPanel,
+  UIRow,
+  UIText,
+  UIListbox,
+  UIButton,
+} from "./libs/ui.js";
 
-import { SetMaterialCommand } from './commands/SetMaterialCommand.js';
+import { SetMaterialCommand } from "./commands/SetMaterialCommand.js";
 
-function SidebarProjectMaterials( editor ) {
+function SidebarProjectMaterials(editor) {
+  const signals = editor.signals;
+  const strings = editor.strings;
 
-	const signals = editor.signals;
-	const strings = editor.strings;
+  const container = new UIPanel();
 
-	const container = new UIPanel();
+  const headerRow = new UIRow();
+  headerRow.add(
+    new UIText(strings.getKey("sidebar/project/materials").toUpperCase())
+  );
 
-	const headerRow = new UIRow();
-	headerRow.add( new UIText( strings.getKey( 'sidebar/project/materials' ).toUpperCase() ) );
+  container.add(headerRow);
 
-	container.add( headerRow );
+  const listbox = new UIListbox();
+  container.add(listbox);
 
-	const listbox = new UIListbox();
-	container.add( listbox );
+  container.add(new UIBreak());
 
-	container.add( new UIBreak() );
+  const buttonsRow = new UIRow();
+  container.add(buttonsRow);
 
-	const buttonsRow = new UIRow();
-	container.add( buttonsRow );
+  const assignMaterial = new UIButton(strings.getKey("sidebar/project/Assign"));
+  assignMaterial.onClick(function () {
+    const selectedObject = editor.selected;
 
-	const assignMaterial = new UIButton( strings.getKey( 'sidebar/project/Assign' ) );
-	assignMaterial.onClick( function () {
+    if (selectedObject !== null) {
+      const oldMaterial = selectedObject.material;
 
-		const selectedObject = editor.selected;
+      // only assing materials to objects with a material property (e.g. avoid assigning material to THREE.Group)
 
-		if ( selectedObject !== null ) {
+      if (oldMaterial !== undefined) {
+        const material = editor.getMaterialById(parseInt(listbox.getValue()));
 
-			const oldMaterial = selectedObject.material;
+        if (material !== undefined) {
+          editor.removeMaterial(oldMaterial);
+          editor.execute(
+            new SetMaterialCommand(editor, selectedObject, material)
+          );
+          editor.addMaterial(material);
+        }
+      }
+    }
+  });
+  buttonsRow.add(assignMaterial);
 
-			// only assing materials to objects with a material property (e.g. avoid assigning material to THREE.Group)
+  // Signals
 
-			if ( oldMaterial !== undefined ) {
+  function refreshMaterialBrowserUI() {
+    listbox.setItems(Object.values(editor.materials));
+  }
 
-				const material = editor.getMaterialById( parseInt( listbox.getValue() ) );
+  signals.objectSelected.add(function (object) {
+    if (object !== null) {
+      const index = Object.values(editor.materials).indexOf(object.material);
+      listbox.selectIndex(index);
+    }
+  });
 
-				if ( material !== undefined ) {
+  signals.materialAdded.add(refreshMaterialBrowserUI);
+  signals.materialChanged.add(refreshMaterialBrowserUI);
+  signals.materialRemoved.add(refreshMaterialBrowserUI);
 
-					editor.removeMaterial( oldMaterial );
-					editor.execute( new SetMaterialCommand( editor, selectedObject, material ) );
-					editor.addMaterial( material );
-
-				}
-
-			}
-
-		}
-
-	} );
-	buttonsRow.add( assignMaterial );
-
-	// Signals
-
-	function refreshMaterialBrowserUI() {
-
-		listbox.setItems( Object.values( editor.materials ) );
-
-	}
-
-	signals.objectSelected.add( function ( object ) {
-
-		if ( object !== null ) {
-
-			const index = Object.values( editor.materials ).indexOf( object.material );
-			listbox.selectIndex( index );
-
-		}
-
-	} );
-
-	signals.materialAdded.add( refreshMaterialBrowserUI );
-	signals.materialChanged.add( refreshMaterialBrowserUI );
-	signals.materialRemoved.add( refreshMaterialBrowserUI );
-
-	return container;
-
+  return container;
 }
 
 export { SidebarProjectMaterials };

@@ -1,63 +1,57 @@
-import { UICheckbox, UIRow, UIText } from './libs/ui.js';
-import { SetMaterialValueCommand } from './commands/SetMaterialValueCommand.js';
+import { UICheckbox, UIRow, UIText } from "./libs/ui.js";
+import { SetMaterialValueCommand } from "./commands/SetMaterialValueCommand.js";
 
-function SidebarMaterialBooleanProperty( editor, property, name ) {
+function SidebarMaterialBooleanProperty(editor, property, name) {
+  const signals = editor.signals;
 
-	const signals = editor.signals;
+  const container = new UIRow();
+  container.add(new UIText(name).setWidth("90px"));
 
-	const container = new UIRow();
-	container.add( new UIText( name ).setWidth( '90px' ) );
+  const boolean = new UICheckbox().setLeft("100px").onChange(onChange);
+  container.add(boolean);
 
-	const boolean = new UICheckbox().setLeft( '100px' ).onChange( onChange );
-	container.add( boolean );
+  let object = null;
+  let material = null;
 
-	let object = null;
-	let material = null;
+  function onChange() {
+    if (material[property] !== boolean.getValue()) {
+      editor.execute(
+        new SetMaterialValueCommand(
+          editor,
+          object,
+          property,
+          boolean.getValue(),
+          0 /* TODO: currentMaterialSlot */
+        )
+      );
+    }
+  }
 
-	function onChange() {
+  function update() {
+    if (object === null) return;
+    if (object.material === undefined) return;
 
-		if ( material[ property ] !== boolean.getValue() ) {
+    material = object.material;
 
-			editor.execute( new SetMaterialValueCommand( editor, object, property, boolean.getValue(), 0 /* TODO: currentMaterialSlot */ ) );
+    if (property in material) {
+      boolean.setValue(material[property]);
+      container.setDisplay("");
+    } else {
+      container.setDisplay("none");
+    }
+  }
 
-		}
+  //
 
-	}
+  signals.objectSelected.add(function (selected) {
+    object = selected;
 
-	function update() {
+    update();
+  });
 
-		if ( object === null ) return;
-		if ( object.material === undefined ) return;
+  signals.materialChanged.add(update);
 
-		material = object.material;
-
-		if ( property in material ) {
-
-			boolean.setValue( material[ property ] );
-			container.setDisplay( '' );
-
-		} else {
-
-			container.setDisplay( 'none' );
-
-		}
-
-	}
-
-	//
-
-	signals.objectSelected.add( function ( selected ) {
-
-		object = selected;
-
-		update();
-
-	} );
-
-	signals.materialChanged.add( update );
-
-	return container;
-
+  return container;
 }
 
 export { SidebarMaterialBooleanProperty };

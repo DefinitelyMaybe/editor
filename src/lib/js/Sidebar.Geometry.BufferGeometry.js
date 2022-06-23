@@ -1,115 +1,125 @@
-import { UIRow, UIText, UISpan, UIBreak, UICheckbox } from './libs/ui.js';
+import { UIRow, UIText, UISpan, UIBreak, UICheckbox } from "./libs/ui.js";
 
-function SidebarGeometryBufferGeometry( editor ) {
+function SidebarGeometryBufferGeometry(editor) {
+  const strings = editor.strings;
 
-	const strings = editor.strings;
+  const signals = editor.signals;
 
-	const signals = editor.signals;
+  const container = new UIRow();
 
-	const container = new UIRow();
+  function update(object) {
+    if (object === null) return; // objectSelected.dispatch( null )
+    if (object === undefined) return;
 
-	function update( object ) {
+    const geometry = object.geometry;
 
-		if ( object === null ) return; // objectSelected.dispatch( null )
-		if ( object === undefined ) return;
+    if (geometry && geometry.isBufferGeometry) {
+      container.clear();
+      container.setDisplay("block");
 
-		const geometry = object.geometry;
+      // attributes
 
-		if ( geometry && geometry.isBufferGeometry ) {
+      const attributesRow = new UIRow();
 
-			container.clear();
-			container.setDisplay( 'block' );
+      const textAttributes = new UIText(
+        strings.getKey("sidebar/geometry/buffer_geometry/attributes")
+      ).setWidth("90px");
+      attributesRow.add(textAttributes);
 
-			// attributes
+      const containerAttributes = new UISpan()
+        .setDisplay("inline-block")
+        .setVerticalAlign("middle")
+        .setWidth("160px");
+      attributesRow.add(containerAttributes);
 
-			const attributesRow = new UIRow();
+      const index = geometry.index;
 
-			const textAttributes = new UIText( strings.getKey( 'sidebar/geometry/buffer_geometry/attributes' ) ).setWidth( '90px' );
-			attributesRow.add( textAttributes );
+      if (index !== null) {
+        containerAttributes.add(
+          new UIText(
+            strings.getKey("sidebar/geometry/buffer_geometry/index")
+          ).setWidth("80px")
+        );
+        containerAttributes.add(
+          new UIText(index.count.format()).setFontSize("12px")
+        );
+        containerAttributes.add(new UIBreak());
+      }
 
-			const containerAttributes = new UISpan().setDisplay( 'inline-block' ).setVerticalAlign( 'middle' ).setWidth( '160px' );
-			attributesRow.add( containerAttributes );
+      const attributes = geometry.attributes;
 
-			const index = geometry.index;
+      for (const name in attributes) {
+        const attribute = attributes[name];
 
-			if ( index !== null ) {
+        containerAttributes.add(new UIText(name).setWidth("80px"));
+        containerAttributes.add(
+          new UIText(
+            attribute.count.format() + " (" + attribute.itemSize + ")"
+          ).setFontSize("12px")
+        );
+        containerAttributes.add(new UIBreak());
+      }
 
-				containerAttributes.add( new UIText( strings.getKey( 'sidebar/geometry/buffer_geometry/index' ) ).setWidth( '80px' ) );
-				containerAttributes.add( new UIText( ( index.count ).format() ).setFontSize( '12px' ) );
-				containerAttributes.add( new UIBreak() );
+      container.add(attributesRow);
 
-			}
+      // morph targets
 
-			const attributes = geometry.attributes;
+      const morphAttributes = geometry.morphAttributes;
+      const hasMorphTargets = Object.keys(morphAttributes).length > 0;
 
-			for ( const name in attributes ) {
+      if (hasMorphTargets === true) {
+        // morph attributes
 
-				const attribute = attributes[ name ];
+        const rowMorphAttributes = new UIRow();
 
-				containerAttributes.add( new UIText( name ).setWidth( '80px' ) );
-				containerAttributes.add( new UIText( ( attribute.count ).format() + ' (' + attribute.itemSize + ')' ).setFontSize( '12px' ) );
-				containerAttributes.add( new UIBreak() );
+        const textMorphAttributes = new UIText(
+          strings.getKey("sidebar/geometry/buffer_geometry/morphAttributes")
+        ).setWidth("90px");
+        rowMorphAttributes.add(textMorphAttributes);
 
-			}
+        const containerMorphAttributes = new UISpan()
+          .setDisplay("inline-block")
+          .setVerticalAlign("middle")
+          .setWidth("160px");
+        rowMorphAttributes.add(containerMorphAttributes);
 
-			container.add( attributesRow );
+        for (const name in morphAttributes) {
+          const morphTargets = morphAttributes[name];
 
-			// morph targets
+          containerMorphAttributes.add(new UIText(name).setWidth("80px"));
+          containerMorphAttributes.add(
+            new UIText(morphTargets.length.format()).setFontSize("12px")
+          );
+          containerMorphAttributes.add(new UIBreak());
+        }
 
-			const morphAttributes = geometry.morphAttributes;
-			const hasMorphTargets = Object.keys( morphAttributes ).length > 0;
+        container.add(rowMorphAttributes);
 
-			if ( hasMorphTargets === true ) {
+        // morph relative
 
-				// morph attributes
+        const rowMorphRelative = new UIRow();
 
-				const rowMorphAttributes = new UIRow();
+        const textMorphRelative = new UIText(
+          strings.getKey("sidebar/geometry/buffer_geometry/morphRelative")
+        ).setWidth("90px");
+        rowMorphRelative.add(textMorphRelative);
 
-				const textMorphAttributes = new UIText( strings.getKey( 'sidebar/geometry/buffer_geometry/morphAttributes' ) ).setWidth( '90px' );
-				rowMorphAttributes.add( textMorphAttributes );
+        const checkboxMorphRelative = new UICheckbox()
+          .setValue(geometry.morphTargetsRelative)
+          .setDisabled(true);
+        rowMorphRelative.add(checkboxMorphRelative);
 
-				const containerMorphAttributes = new UISpan().setDisplay( 'inline-block' ).setVerticalAlign( 'middle' ).setWidth( '160px' );
-				rowMorphAttributes.add( containerMorphAttributes );
+        container.add(rowMorphRelative);
+      }
+    } else {
+      container.setDisplay("none");
+    }
+  }
 
-				for ( const name in morphAttributes ) {
+  signals.objectSelected.add(update);
+  signals.geometryChanged.add(update);
 
-					const morphTargets = morphAttributes[ name ];
-
-					containerMorphAttributes.add( new UIText( name ).setWidth( '80px' ) );
-					containerMorphAttributes.add( new UIText( ( morphTargets.length ).format() ).setFontSize( '12px' ) );
-					containerMorphAttributes.add( new UIBreak() );
-
-				}
-
-				container.add( rowMorphAttributes );
-
-				// morph relative
-
-				const rowMorphRelative = new UIRow();
-
-				const textMorphRelative = new UIText( strings.getKey( 'sidebar/geometry/buffer_geometry/morphRelative' ) ).setWidth( '90px' );
-				rowMorphRelative.add( textMorphRelative );
-
-				const checkboxMorphRelative = new UICheckbox().setValue( geometry.morphTargetsRelative ).setDisabled( true );
-				rowMorphRelative.add( checkboxMorphRelative );
-
-				container.add( rowMorphRelative );
-
-			}
-
-		} else {
-
-			container.setDisplay( 'none' );
-
-		}
-
-	}
-
-	signals.objectSelected.add( update );
-	signals.geometryChanged.add( update );
-
-	return container;
-
+  return container;
 }
 
 export { SidebarGeometryBufferGeometry };

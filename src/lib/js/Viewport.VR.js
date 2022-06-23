@@ -1,131 +1,124 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import { HTMLMesh } from 'three/examples/jsm/interactive/HTMLMesh.js';
-import { InteractiveGroup } from 'three/examples/jsm/interactive/InteractiveGroup.js';
+import { HTMLMesh } from "three/examples/jsm/interactive/HTMLMesh.js";
+import { InteractiveGroup } from "three/examples/jsm/interactive/InteractiveGroup.js";
 
-import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
+import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerModelFactory.js";
 
 class VR {
+  constructor(editor) {
+    const signals = editor.signals;
 
-	constructor( editor ) {
+    let group = null;
 
-		const signals = editor.signals;
+    let camera = null;
+    let renderer = null;
 
-		let group = null;
+    const intersectables = [];
 
-		let camera = null;
-		let renderer = null;
+    this.currentSession = null;
 
-		const intersectables = [];
+    const onSessionStarted = async (session) => {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.style.width = "300px";
+      sidebar.style.height = "700px";
 
-		this.currentSession = null;
+      //
 
-		const onSessionStarted = async ( session ) => {
+      if (group === null) {
+        group = new InteractiveGroup(renderer);
+        editor.sceneHelpers.add(group);
 
-			const sidebar = document.getElementById( 'sidebar' );
-			sidebar.style.width = '300px';
-			sidebar.style.height = '700px';
+        const mesh = new HTMLMesh(sidebar);
+        mesh.position.set(1, 1.5, -0.5);
+        mesh.rotation.y = -0.5;
+        mesh.scale.setScalar(2);
+        group.add(mesh);
 
-			//
+        intersectables.push(mesh);
 
-			if ( group === null ) {
+        // controllers
 
-				group = new InteractiveGroup( renderer );
-				editor.sceneHelpers.add( group );
+        const geometry = new THREE.BufferGeometry();
+        geometry.setFromPoints([
+          new THREE.Vector3(0, 0, 0),
+          new THREE.Vector3(0, 0, -5),
+        ]);
 
-				const mesh = new HTMLMesh( sidebar );
-				mesh.position.set( 1, 1.5, - 0.5 );
-				mesh.rotation.y = - 0.5;
-				mesh.scale.setScalar( 2 );
-				group.add( mesh );
+        const controller1 = renderer.xr.getController(0);
+        controller1.add(new THREE.Line(geometry));
+        group.add(controller1);
 
-				intersectables.push( mesh );
+        const controller2 = renderer.xr.getController(1);
+        controller2.add(new THREE.Line(geometry));
+        group.add(controller2);
 
-				// controllers
+        //
 
-				const geometry = new THREE.BufferGeometry();
-				geometry.setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 5 ) ] );
+        const controllerModelFactory = new XRControllerModelFactory();
 
-				const controller1 = renderer.xr.getController( 0 );
-				controller1.add( new THREE.Line( geometry ) );
-				group.add( controller1 );
+        const controllerGrip1 = renderer.xr.getControllerGrip(0);
+        controllerGrip1.add(
+          controllerModelFactory.createControllerModel(controllerGrip1)
+        );
+        group.add(controllerGrip1);
 
-				const controller2 = renderer.xr.getController( 1 );
-				controller2.add( new THREE.Line( geometry ) );
-				group.add( controller2 );
+        const controllerGrip2 = renderer.xr.getControllerGrip(1);
+        controllerGrip2.add(
+          controllerModelFactory.createControllerModel(controllerGrip2)
+        );
+        group.add(controllerGrip2);
+      }
 
-				//
+      camera = editor.camera.clone();
 
-				const controllerModelFactory = new XRControllerModelFactory();
+      group.visible = true;
 
-				const controllerGrip1 = renderer.xr.getControllerGrip( 0 );
-				controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
-				group.add( controllerGrip1 );
+      this.currentSession = session;
+      this.currentSession.addEventListener("end", onSessionEnded);
 
-				const controllerGrip2 = renderer.xr.getControllerGrip( 1 );
-				controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
-				group.add( controllerGrip2 );
+      await renderer.xr.setSession(this.currentSession);
+    };
 
-			}
+    const onSessionEnded = async () => {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.style.width = "";
+      sidebar.style.height = "";
 
-			camera = editor.camera.clone();
+      //
 
-			group.visible = true;
+      editor.camera.copy(camera);
 
-			this.currentSession = session;
-			this.currentSession.addEventListener( 'end', onSessionEnded );
+      group.visible = false;
 
-			await renderer.xr.setSession( this.currentSession );
+      this.currentSession.removeEventListener("end", onSessionEnded);
+      this.currentSession = null;
 
-		};
+      await renderer.xr.setSession(null);
 
-		const onSessionEnded = async () => {
+      signals.exitedVR.dispatch();
+    };
 
-			const sidebar = document.getElementById( 'sidebar' );
-			sidebar.style.width = '';
-			sidebar.style.height = '';
+    // signals
 
-			//
+    signals.toggleVR.add(() => {
+      if (this.currentSession === null) {
+        const sessionInit = {
+          optionalFeatures: ["local-floor", "bounded-floor"],
+        };
+        navigator.xr
+          .requestSession("immersive-vr", sessionInit)
+          .then(onSessionStarted);
+      } else {
+        this.currentSession.end();
+      }
+    });
 
-			editor.camera.copy( camera );
-
-			group.visible = false;
-
-			this.currentSession.removeEventListener( 'end', onSessionEnded );
-			this.currentSession = null;
-
-			await renderer.xr.setSession( null );
-
-			signals.exitedVR.dispatch();
-
-		};
-
-		// signals
-
-		signals.toggleVR.add( () => {
-
-			if ( this.currentSession === null ) {
-
-				const sessionInit = { optionalFeatures: [ 'local-floor', 'bounded-floor' ] };
-				navigator.xr.requestSession( 'immersive-vr', sessionInit ).then( onSessionStarted );
-
-			} else {
-
-				this.currentSession.end();
-
-			}
-
-		} );
-
-		signals.rendererCreated.add( ( value ) => {
-
-			renderer = value;
-			renderer.xr.enabled = true;
-
-		} );
-
-	}
-
+    signals.rendererCreated.add((value) => {
+      renderer = value;
+      renderer.xr.enabled = true;
+    });
+  }
 }
 
 export { VR };

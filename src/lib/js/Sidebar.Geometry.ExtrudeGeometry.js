@@ -1,147 +1,205 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import { UIDiv, UIRow, UIText, UIInteger, UICheckbox, UIButton, UINumber } from './libs/ui.js';
+import {
+  UIDiv,
+  UIRow,
+  UIText,
+  UIInteger,
+  UICheckbox,
+  UIButton,
+  UINumber,
+} from "./libs/ui.js";
 
-import { SetGeometryCommand } from './commands/SetGeometryCommand.js';
+import { SetGeometryCommand } from "./commands/SetGeometryCommand.js";
 
-function GeometryParametersPanel( editor, object ) {
+function GeometryParametersPanel(editor, object) {
+  const strings = editor.strings;
 
-	const strings = editor.strings;
+  const container = new UIDiv();
 
-	const container = new UIDiv();
+  const geometry = object.geometry;
+  const parameters = geometry.parameters;
+  const options = parameters.options;
+  options.curveSegments =
+    options.curveSegments != undefined ? options.curveSegments : 12;
+  options.steps = options.steps != undefined ? options.steps : 1;
+  options.depth = options.depth != undefined ? options.depth : 100;
+  options.bevelThickness =
+    options.bevelThickness !== undefined ? options.bevelThickness : 6;
+  options.bevelSize = options.bevelSize !== undefined ? options.bevelSize : 4;
+  options.bevelOffset =
+    options.bevelOffset !== undefined ? options.bevelOffset : 0;
+  options.bevelSegments =
+    options.bevelSegments !== undefined ? options.bevelSegments : 3;
 
-	const geometry = object.geometry;
-	const parameters = geometry.parameters;
-	const options = parameters.options;
-	options.curveSegments = options.curveSegments != undefined ? options.curveSegments : 12;
-	options.steps = options.steps != undefined ? options.steps : 1;
-	options.depth = options.depth != undefined ? options.depth : 100;
-	options.bevelThickness = options.bevelThickness !== undefined ? options.bevelThickness : 6;
-	options.bevelSize = options.bevelSize !== undefined ? options.bevelSize : 4;
-	options.bevelOffset = options.bevelOffset !== undefined ? options.bevelOffset : 0;
-	options.bevelSegments = options.bevelSegments !== undefined ? options.bevelSegments : 3;
+  // curveSegments
 
+  const curveSegmentsRow = new UIRow();
+  const curveSegments = new UIInteger(options.curveSegments)
+    .onChange(update)
+    .setRange(1, Infinity);
 
-	// curveSegments
+  curveSegmentsRow.add(
+    new UIText(
+      strings.getKey("sidebar/geometry/extrude_geometry/curveSegments")
+    ).setWidth("90px")
+  );
+  curveSegmentsRow.add(curveSegments);
 
-	const curveSegmentsRow = new UIRow();
-	const curveSegments = new UIInteger( options.curveSegments ).onChange( update ).setRange( 1, Infinity );
+  container.add(curveSegmentsRow);
 
-	curveSegmentsRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/curveSegments' ) ).setWidth( '90px' ) );
-	curveSegmentsRow.add( curveSegments );
+  // steps
 
-	container.add( curveSegmentsRow );
+  const stepsRow = new UIRow();
+  const steps = new UIInteger(options.steps)
+    .onChange(update)
+    .setRange(1, Infinity);
 
-	// steps
+  stepsRow.add(
+    new UIText(
+      strings.getKey("sidebar/geometry/extrude_geometry/steps")
+    ).setWidth("90px")
+  );
+  stepsRow.add(steps);
 
-	const stepsRow = new UIRow();
-	const steps = new UIInteger( options.steps ).onChange( update ).setRange( 1, Infinity );
+  container.add(stepsRow);
 
-	stepsRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/steps' ) ).setWidth( '90px' ) );
-	stepsRow.add( steps );
+  // depth
 
-	container.add( stepsRow );
+  const depthRow = new UIRow();
+  const depth = new UINumber(options.depth)
+    .onChange(update)
+    .setRange(1, Infinity);
 
-	// depth
+  depthRow.add(
+    new UIText(
+      strings.getKey("sidebar/geometry/extrude_geometry/depth")
+    ).setWidth("90px")
+  );
+  depthRow.add(depth);
 
-	const depthRow = new UIRow();
-	const depth = new UINumber( options.depth ).onChange( update ).setRange( 1, Infinity );
+  container.add(depthRow);
 
-	depthRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/depth' ) ).setWidth( '90px' ) );
-	depthRow.add( depth );
+  // enabled
 
-	container.add( depthRow );
+  const enabledRow = new UIRow();
+  const enabled = new UICheckbox(options.bevelEnabled).onChange(update);
 
-	// enabled
+  enabledRow.add(
+    new UIText(
+      strings.getKey("sidebar/geometry/extrude_geometry/bevelEnabled")
+    ).setWidth("90px")
+  );
+  enabledRow.add(enabled);
 
-	const enabledRow = new UIRow();
-	const enabled = new UICheckbox( options.bevelEnabled ).onChange( update );
+  container.add(enabledRow);
 
-	enabledRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/bevelEnabled' ) ).setWidth( '90px' ) );
-	enabledRow.add( enabled );
+  let thickness, size, offset, segments;
 
-	container.add( enabledRow );
+  if (options.bevelEnabled === true) {
+    // thickness
 
-	let thickness, size, offset, segments;
+    const thicknessRow = new UIRow();
+    thickness = new UINumber(options.bevelThickness).onChange(update);
 
-	if ( options.bevelEnabled === true ) {
+    thicknessRow.add(
+      new UIText(
+        strings.getKey("sidebar/geometry/extrude_geometry/bevelThickness")
+      ).setWidth("90px")
+    );
+    thicknessRow.add(thickness);
 
-		// thickness
+    container.add(thicknessRow);
 
-		const thicknessRow = new UIRow();
-		thickness = new UINumber( options.bevelThickness ).onChange( update );
+    // size
 
-		thicknessRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/bevelThickness' ) ).setWidth( '90px' ) );
-		thicknessRow.add( thickness );
+    const sizeRow = new UIRow();
+    size = new UINumber(options.bevelSize).onChange(update);
 
-		container.add( thicknessRow );
+    sizeRow.add(
+      new UIText(
+        strings.getKey("sidebar/geometry/extrude_geometry/bevelSize")
+      ).setWidth("90px")
+    );
+    sizeRow.add(size);
 
-		// size
+    container.add(sizeRow);
 
-		const sizeRow = new UIRow();
-		size = new UINumber( options.bevelSize ).onChange( update );
+    // offset
 
-		sizeRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/bevelSize' ) ).setWidth( '90px' ) );
-		sizeRow.add( size );
+    const offsetRow = new UIRow();
+    offset = new UINumber(options.bevelOffset).onChange(update);
 
-		container.add( sizeRow );
+    offsetRow.add(
+      new UIText(
+        strings.getKey("sidebar/geometry/extrude_geometry/bevelOffset")
+      ).setWidth("90px")
+    );
+    offsetRow.add(offset);
 
-		// offset
+    container.add(offsetRow);
 
-		const offsetRow = new UIRow();
-		offset = new UINumber( options.bevelOffset ).onChange( update );
+    // segments
 
-		offsetRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/bevelOffset' ) ).setWidth( '90px' ) );
-		offsetRow.add( offset );
+    const segmentsRow = new UIRow();
+    segments = new UIInteger(options.bevelSegments)
+      .onChange(update)
+      .setRange(0, Infinity);
 
-		container.add( offsetRow );
+    segmentsRow.add(
+      new UIText(
+        strings.getKey("sidebar/geometry/extrude_geometry/bevelSegments")
+      ).setWidth("90px")
+    );
+    segmentsRow.add(segments);
 
-		// segments
+    container.add(segmentsRow);
+  }
 
-		const segmentsRow = new UIRow();
-		segments = new UIInteger( options.bevelSegments ).onChange( update ).setRange( 0, Infinity );
+  const button = new UIButton(
+    strings.getKey("sidebar/geometry/extrude_geometry/shape")
+  )
+    .onClick(toShape)
+    .setWidth("90px")
+    .setMarginLeft("90px");
+  container.add(button);
 
-		segmentsRow.add( new UIText( strings.getKey( 'sidebar/geometry/extrude_geometry/bevelSegments' ) ).setWidth( '90px' ) );
-		segmentsRow.add( segments );
+  //
 
-		container.add( segmentsRow );
+  function update() {
+    editor.execute(
+      new SetGeometryCommand(
+        editor,
+        object,
+        new THREE.ExtrudeGeometry(parameters.shapes, {
+          curveSegments: curveSegments.getValue(),
+          steps: steps.getValue(),
+          depth: depth.getValue(),
+          bevelEnabled: enabled.getValue(),
+          bevelThickness: options.bevelThickness,
+          bevelSize: size !== undefined ? size.getValue() : options.bevelSize,
+          bevelOffset:
+            offset !== undefined ? offset.getValue() : options.bevelOffset,
+          bevelSegments:
+            segments !== undefined
+              ? segments.getValue()
+              : options.bevelSegments,
+        })
+      )
+    );
+  }
 
-	}
+  function toShape() {
+    editor.execute(
+      new SetGeometryCommand(
+        editor,
+        object,
+        new THREE.ShapeGeometry(parameters.shapes, options.curveSegments)
+      )
+    );
+  }
 
-	const button = new UIButton( strings.getKey( 'sidebar/geometry/extrude_geometry/shape' ) ).onClick( toShape ).setWidth( '90px' ).setMarginLeft( '90px' );
-	container.add( button );
-
-	//
-
-	function update() {
-
-		editor.execute( new SetGeometryCommand( editor, object, new THREE.ExtrudeGeometry(
-			parameters.shapes,
-			{
-				curveSegments: curveSegments.getValue(),
-				steps: steps.getValue(),
-				depth: depth.getValue(),
-				bevelEnabled: enabled.getValue(),
-				bevelThickness: options.bevelThickness,
-				bevelSize: size !== undefined ? size.getValue() : options.bevelSize,
-				bevelOffset: offset !== undefined ? offset.getValue() : options.bevelOffset,
-				bevelSegments: segments !== undefined ? segments.getValue() : options.bevelSegments
-			}
-		) ) );
-
-	}
-
-	function toShape() {
-
-		editor.execute( new SetGeometryCommand( editor, object, new THREE.ShapeGeometry(
-			parameters.shapes,
-			options.curveSegments
-		) ) );
-
-	}
-
-	return container;
-
+  return container;
 }
 
 export { GeometryParametersPanel };
