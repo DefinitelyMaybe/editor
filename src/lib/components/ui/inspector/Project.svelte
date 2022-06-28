@@ -16,7 +16,7 @@
   // Signals
 
   signals.editorCleared.add(function () {
-    title = ""
+    title = "";
     config.setKey("project/title", title);
   });
 
@@ -62,5 +62,5 @@
         config.setKey("project/vr", vr);
       }} />
   </div>
-  <Renderer/>
+  <Renderer />
 </div>

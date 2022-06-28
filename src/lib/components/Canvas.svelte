@@ -227,7 +227,7 @@
 
 <svelte:window on:resize={resize} />
 
-<div class="absolute w-full h-full" bind:this={container}>
+<div class="absolute h-full w-full" bind:this={container}>
   <canvas
     class="absolute"
     on:pointerdown

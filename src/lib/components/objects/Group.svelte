@@ -12,7 +12,7 @@
 
   const { root, self } = setup(new THREE.Group());
 
-  obj = self
+  obj = self;
 
   $: {
     self.renderOrder = renderOrder;

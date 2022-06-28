@@ -1,12 +1,16 @@
 <script>
-  let button
-  let key = ""
-  let open = false
-  export let action
+  let button;
+  let key = "";
+  let open = false;
+  export let action;
 </script>
 
-<button class="btn m-1 h-20 w-20" on:click="{action}" bind:this="{button}">
-  <div class="dropdown dropdown-top {open ? 'dropdown-open' : ''}" on:blur="{()=>{open = false}}">
+<button class="btn m-1 h-20 w-20" on:click={action} bind:this={button}>
+  <div
+    class="dropdown dropdown-top {open ? 'dropdown-open' : ''}"
+    on:blur={() => {
+      open = false;
+    }}>
     <label tabindex="0" class="hidden"> none </label>
     <ul
       tabindex="0"
@@ -16,6 +20,6 @@
       </li>
     </ul>
   </div>
-  <slot name="icon"></slot>
+  <slot name="icon" />
   <p>{key}</p>
 </button>

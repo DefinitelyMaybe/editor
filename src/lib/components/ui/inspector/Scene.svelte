@@ -74,7 +74,7 @@
     if (scene.background) {
       if (scene.background.isColor) {
         background = "Color";
-        bgColor = `#${scene.background.getHexString()}`
+        bgColor = `#${scene.background.getHexString()}`;
       } else if (scene.background.isTexture) {
         if (
           scene.background.mapping === THREE.EquirectangularReflectionMapping
@@ -102,7 +102,7 @@
     }
 
     if (scene.fog) {
-      fogColor = `#${scene.fog.color.getHexString()}`
+      fogColor = `#${scene.fog.color.getHexString()}`;
 
       if (scene.fog.isFog) {
         fog = "Fog";
@@ -219,5 +219,5 @@
         on:change={onFogSettingsChanged} />
     </div>
   </div>
-  <Object3D/>
+  <Object3D />
 </div>

@@ -4,5 +4,5 @@ module.exports = {
 		// 'text-blue-100',
 		// {pattern: /text-(red|grey)-(500|800)/}
 	],
-	plugins: []
+	plugins: [require('daisyui')]
 };

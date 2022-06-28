@@ -194,7 +194,6 @@
 
     return "";
   }
-
 </script>
 
 <p>==== Explorer - WIP ====</p>

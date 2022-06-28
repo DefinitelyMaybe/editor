@@ -87,30 +87,30 @@
   async function exportDRC() {
     const object = editor.selected;
 
-        if (object === null || object.isMesh === undefined) {
-          alert("No mesh selected");
-          return;
-        }
+    if (object === null || object.isMesh === undefined) {
+      alert("No mesh selected");
+      return;
+    }
 
-        const { DRACOExporter } = await import(
-          "three/examples/jsm/exporters/DRACOExporter.js"
-        );
+    const { DRACOExporter } = await import(
+      "three/examples/jsm/exporters/DRACOExporter.js"
+    );
 
-        const exporter = new DRACOExporter();
+    const exporter = new DRACOExporter();
 
-        const options = {
-          decodeSpeed: 5,
-          encodeSpeed: 5,
-          encoderMethod: DRACOExporter.MESH_EDGEBREAKER_ENCODING,
-          quantization: [16, 8, 8, 8, 8],
-          exportUvs: true,
-          exportNormals: true,
-          exportColor: object.geometry.hasAttribute("color"),
-        };
+    const options = {
+      decodeSpeed: 5,
+      encodeSpeed: 5,
+      encoderMethod: DRACOExporter.MESH_EDGEBREAKER_ENCODING,
+      quantization: [16, 8, 8, 8, 8],
+      exportUvs: true,
+      exportNormals: true,
+      exportColor: object.geometry.hasAttribute("color"),
+    };
 
-        // TODO: Change to DRACOExporter's parse( geometry, onParse )?
-        const result = exporter.parse(object, options);
-        saveArrayBuffer(result, "model.drc");
+    // TODO: Change to DRACOExporter's parse( geometry, onParse )?
+    const result = exporter.parse(object, options);
+    saveArrayBuffer(result, "model.drc");
   }
 
   async function exportGLTF(bin) {
@@ -300,8 +300,7 @@
     <li on:click={exportDAE}>
       <a>Export DAE</a>
     </li>
-    <li
-      on:click={exportDRC}>
+    <li on:click={exportDRC}>
       <a>Export DRC</a>
     </li>
     <li

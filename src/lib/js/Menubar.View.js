@@ -42,8 +42,9 @@ function MenubarView(editor) {
 
   if (browser) {
     if ("xr" in navigator) {
-      navigator.xr.isSessionSupported("immersive-vr").then(
-        function (supported) {
+      navigator.xr
+        .isSessionSupported("immersive-vr")
+        .then(function (supported) {
           if (supported) {
             const option = new UIRow();
             option.setClass("option");
@@ -53,8 +54,7 @@ function MenubarView(editor) {
             });
             options.add(option);
           }
-        },
-      );
+        });
     }
   }
 

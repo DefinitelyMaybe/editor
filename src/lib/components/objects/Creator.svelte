@@ -48,12 +48,11 @@
   }}
   on:keypress={handleKeyPress} />
 
-<SC.PerspectiveCamera
-  fov={90}
-  far={1000}
-  near={0.01}
-  position={[0, 5, 10]}/>
-<SC.OrbitControls enableZoom={true} enablePan={true} maxPolarAngle={Math.PI * 0.51} />
+<SC.PerspectiveCamera fov={90} far={1000} near={0.01} position={[0, 5, 10]} />
+<SC.OrbitControls
+  enableZoom={true}
+  enablePan={true}
+  maxPolarAngle={Math.PI * 0.51} />
 <SC.Mesh
   geometry={new THREE.CapsuleGeometry()}
   material={new THREE.MeshStandardMaterial({ color: "#aaaaaa" })}

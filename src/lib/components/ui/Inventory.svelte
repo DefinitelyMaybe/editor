@@ -1,30 +1,25 @@
 <script>
   import * as SC from "$lib/index.js";
   import * as THREE from "three";
-  import {
-    FolderAddIcon,
-  } from "@rgossiaux/svelte-heroicons/outline";
+  import { FolderAddIcon } from "@rgossiaux/svelte-heroicons/outline";
 
   let colour = "#735f59";
   let open = false;
 
   const createData = (param) => {
     return JSON.stringify({
-            component: "mesh",
-            props: {
-              geometry: { type: param },
-              material: {
-                type: "standard",
-              },
-            },
-          })
-  }
+      component: "mesh",
+      props: {
+        geometry: { type: param },
+        material: {
+          type: "standard",
+        },
+      },
+    });
+  };
 
   function handleDragStart(event, params) {
-    event.dataTransfer.setData(
-      "test",
-      createData(params)
-    );
+    event.dataTransfer.setData("test", createData(params));
   }
 </script>
 
@@ -40,7 +35,7 @@
   }} />
 
 <h1>Inventory</h1>
-<div class="dropdown-right dropdown {open ? 'dropdown-open' : ''}">
+<div class="dropdown dropdown-right {open ? 'dropdown-open' : ''}">
   <label tabindex="0" class="btn btn-ghost m-1 h-16 w-16 p-0">
     <FolderAddIcon />
   </label>

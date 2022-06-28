@@ -4,7 +4,7 @@
 
   export let far = Infinity;
   export let near = 0;
-  export let object = null
+  export let object = null;
 
   const { root } = setup();
 

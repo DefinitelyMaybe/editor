@@ -1,10 +1,12 @@
 <div class="dropdown dropdown-end">
-  <label for="" tabindex="0" class="btn btn-ghost btn-circle avatar">
+  <label for="" tabindex="0" class="avatar btn btn-ghost btn-circle">
     <div class="w-10 rounded-full">
       <img src="https://api.lorem.space/image/face?hash=33791" alt="avatar" />
     </div>
   </label>
-  <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+  <ul
+    tabindex="0"
+    class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
     <li>
       <a class="justify-between">
         Profile

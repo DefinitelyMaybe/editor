@@ -96,7 +96,7 @@
 </script>
 
 <div class="flex w-full flex-col">
-  <div class="divider"/>
+  <div class="divider" />
   <h1 class="text-lg">Renderer</h1>
 </div>
 <div class="flex items-center">
@@ -155,7 +155,7 @@
     </select>
     <input
       type="number"
-      class="input input-bordered items-end {toneMapping === 0? "hidden":""}"
+      class="input input-bordered items-end {toneMapping === 0 ? 'hidden' : ''}"
       disabled={toneMapping == 0}
       min={0}
       max={10}

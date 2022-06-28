@@ -12,7 +12,7 @@
       document.documentElement.webkitRequestFullscreen();
     } else if (document.webkitExitFullscreen) {
       document.webkitExitFullscreen();
-    } 
+    }
   }
 </script>
 
@@ -21,6 +21,6 @@
   <ul
     tabindex="0"
     class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
-    <li on:click="{toggleFullscreen}"><a>Fullscreen</a></li>
+    <li on:click={toggleFullscreen}><a>Fullscreen</a></li>
   </ul>
 </div>

@@ -15,7 +15,7 @@ _DEFAULT_CAMERA.lookAt(new THREE.Vector3());
 class Signal {
   funcs = [];
   constructor(name) {
-    this.name = name
+    this.name = name;
   }
   add(fn) {
     // console.info(`${this.name} signal adding new function:`);
@@ -136,7 +136,7 @@ export class Editor {
     this.addCamera(this.camera);
   }
 
-  setScene (scene) {
+  setScene(scene) {
     this.scene.uuid = scene.uuid;
     this.scene.name = scene.name;
 
@@ -160,7 +160,7 @@ export class Editor {
 
   //
 
-  addObject (object, parent, index) {
+  addObject(object, parent, index) {
     var scope = this;
 
     object.traverse(function (child) {
@@ -182,7 +182,7 @@ export class Editor {
     this.signals.sceneGraphChanged.dispatch();
   }
 
-  moveObject (object, parent, before) {
+  moveObject(object, parent, before) {
     if (parent === undefined) {
       parent = this.scene;
     }
@@ -200,12 +200,12 @@ export class Editor {
     this.signals.sceneGraphChanged.dispatch();
   }
 
-  nameObject (object, name) {
+  nameObject(object, name) {
     object.name = name;
     this.signals.sceneGraphChanged.dispatch();
   }
 
-  removeObject (object) {
+  removeObject(object) {
     if (object.parent === null) return; // avoid deleting the camera or scene
 
     var scope = this;
@@ -223,16 +223,16 @@ export class Editor {
     this.signals.sceneGraphChanged.dispatch();
   }
 
-  addGeometry (geometry) {
+  addGeometry(geometry) {
     this.geometries[geometry.uuid] = geometry;
   }
 
-  setGeometryName (geometry, name) {
+  setGeometryName(geometry, name) {
     geometry.name = name;
     this.signals.sceneGraphChanged.dispatch();
   }
 
-  addMaterial (material) {
+  addMaterial(material) {
     if (Array.isArray(material)) {
       for (var i = 0, l = material.length; i < l; i++) {
         this.addMaterialToRefCounter(material[i]);
@@ -244,7 +244,7 @@ export class Editor {
     this.signals.materialAdded.dispatch();
   }
 
-  addMaterialToRefCounter (material) {
+  addMaterialToRefCounter(material) {
     var materialsRefCounter = this.materialsRefCounter;
 
     var count = materialsRefCounter.get(material);
@@ -258,7 +258,7 @@ export class Editor {
     }
   }
 
-  removeMaterial (material) {
+  removeMaterial(material) {
     if (Array.isArray(material)) {
       for (var i = 0, l = material.length; i < l; i++) {
         this.removeMaterialFromRefCounter(material[i]);
@@ -270,7 +270,7 @@ export class Editor {
     this.signals.materialRemoved.dispatch();
   }
 
-  removeMaterialFromRefCounter (material) {
+  removeMaterialFromRefCounter(material) {
     var materialsRefCounter = this.materialsRefCounter;
 
     var count = materialsRefCounter.get(material);
@@ -284,7 +284,7 @@ export class Editor {
     }
   }
 
-  getMaterialById (id) {
+  getMaterialById(id) {
     var material;
     var materials = Object.values(this.materials);
 
@@ -298,18 +298,18 @@ export class Editor {
     return material;
   }
 
-  setMaterialName (material, name) {
+  setMaterialName(material, name) {
     material.name = name;
     this.signals.sceneGraphChanged.dispatch();
   }
 
-  addTexture (texture) {
+  addTexture(texture) {
     this.textures[texture.uuid] = texture;
   }
 
   //
 
-  addCamera (camera) {
+  addCamera(camera) {
     if (camera.isCamera) {
       this.cameras[camera.uuid] = camera;
 
@@ -317,7 +317,7 @@ export class Editor {
     }
   }
 
-  removeCamera (camera) {
+  removeCamera(camera) {
     if (this.cameras[camera.uuid] !== undefined) {
       delete this.cameras[camera.uuid];
 
@@ -368,7 +368,7 @@ export class Editor {
     };
   }
 
-  removeHelper (object) {
+  removeHelper(object) {
     if (this.helpers[object.id] !== undefined) {
       var helper = this.helpers[object.id];
       helper.parent.remove(helper);
@@ -381,7 +381,7 @@ export class Editor {
 
   //
 
-  addScript (object, script) {
+  addScript(object, script) {
     if (this.scripts[object.uuid] === undefined) {
       this.scripts[object.uuid] = [];
     }
@@ -391,7 +391,7 @@ export class Editor {
     this.signals.scriptAdded.dispatch(script);
   }
 
-  removeScript (object, script) {
+  removeScript(object, script) {
     if (this.scripts[object.uuid] === undefined) return;
 
     var index = this.scripts[object.uuid].indexOf(script);
@@ -403,7 +403,7 @@ export class Editor {
     this.signals.scriptRemoved.dispatch(script);
   }
 
-  getObjectMaterial (object, slot) {
+  getObjectMaterial(object, slot) {
     var material = object.material;
 
     if (Array.isArray(material) && slot !== undefined) {
@@ -413,7 +413,7 @@ export class Editor {
     return material;
   }
 
-  setObjectMaterial (object, slot, newMaterial) {
+  setObjectMaterial(object, slot, newMaterial) {
     if (Array.isArray(object.material) && slot !== undefined) {
       object.material[slot] = newMaterial;
     } else {
@@ -421,14 +421,14 @@ export class Editor {
     }
   }
 
-  setViewportCamera (uuid) {
+  setViewportCamera(uuid) {
     this.viewportCamera = this.cameras[uuid];
     this.signals.viewportCameraChanged.dispatch();
   }
 
   //
 
-  select (object) {
+  select(object) {
     if (this.selected === object) return;
 
     var uuid = null;
@@ -443,7 +443,7 @@ export class Editor {
     this.signals.objectSelected.dispatch(object);
   }
 
-  selectById (id) {
+  selectById(id) {
     if (id === this.camera.id) {
       this.select(this.camera);
       return;
@@ -452,7 +452,7 @@ export class Editor {
     this.select(this.scene.getObjectById(id));
   }
 
-  selectByUuid (uuid) {
+  selectByUuid(uuid) {
     var scope = this;
 
     this.scene.traverse(function (child) {
@@ -462,21 +462,21 @@ export class Editor {
     });
   }
 
-  deselect () {
+  deselect() {
     this.select(null);
   }
 
-  focus (object) {
+  focus(object) {
     if (object !== undefined) {
       this.signals.objectFocused.dispatch(object);
     }
   }
 
-  focusById (id) {
+  focusById(id) {
     this.focus(this.scene.getObjectById(id));
   }
 
-  clear () {
+  clear() {
     this.history.clear();
     this.storage.clear();
 
@@ -512,7 +512,7 @@ export class Editor {
 
   //
 
-  async fromJSON (json) {
+  async fromJSON(json) {
     var loader = new THREE.ObjectLoader();
     var camera = await loader.parseAsync(json.camera);
 
@@ -525,7 +525,7 @@ export class Editor {
     this.setScene(await loader.parseAsync(json.scene));
   }
 
-  toJSON () {
+  toJSON() {
     // scripts clean up
 
     var scene = this.scene;
@@ -565,19 +565,19 @@ export class Editor {
     };
   }
 
-  objectByUuid (uuid) {
+  objectByUuid(uuid) {
     return this.scene.getObjectByProperty("uuid", uuid, true);
   }
 
-  execute (cmd, optionalName) {
+  execute(cmd, optionalName) {
     this.history.execute(cmd, optionalName);
   }
 
-  undo () {
+  undo() {
     this.history.undo();
   }
 
-  redo () {
+  redo() {
     this.history.redo();
   }
 }

@@ -417,13 +417,13 @@ function Viewport(editor) {
 
   // background
 
-  signals.sceneBackgroundChanged.add(function (
-    args
-  ) {
-    const [backgroundType,
+  signals.sceneBackgroundChanged.add(function (args) {
+    const [
+      backgroundType,
       backgroundColor,
       backgroundTexture,
-      backgroundEquirectangularTexture] = args
+      backgroundEquirectangularTexture,
+    ] = args;
     switch (backgroundType) {
       case "None":
         scene.background = null;
@@ -457,11 +457,8 @@ function Viewport(editor) {
 
   // environment
 
-  signals.sceneEnvironmentChanged.add(function (
-    args
-  ) {
-    const [environmentType,
-      environmentEquirectangularTexture] = args
+  signals.sceneEnvironmentChanged.add(function (args) {
+    const [environmentType, environmentEquirectangularTexture] = args;
     switch (environmentType) {
       case "None":
         scene.environment = null;
@@ -493,14 +490,8 @@ function Viewport(editor) {
 
   // fog
 
-  signals.sceneFogChanged.add(function (
-    args
-  ) {
-    const [fogType,
-      fogColor,
-      fogNear,
-      fogFar,
-      fogDensity] = args
+  signals.sceneFogChanged.add(function (args) {
+    const [fogType, fogColor, fogNear, fogFar, fogDensity] = args;
     switch (fogType) {
       case "None":
         scene.fog = null;
@@ -516,14 +507,8 @@ function Viewport(editor) {
     render();
   });
 
-  signals.sceneFogSettingsChanged.add(function (
-    args
-  ) {
-    const [ fogType,
-      fogColor,
-      fogNear,
-      fogFar,
-      fogDensity] = args
+  signals.sceneFogSettingsChanged.add(function (args) {
+    const [fogType, fogColor, fogNear, fogFar, fogDensity] = args;
     switch (fogType) {
       case "Fog":
         scene.fog.color.setHex(fogColor);

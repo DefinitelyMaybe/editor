@@ -8,5 +8,5 @@
 
   const { root } = setup(new GridHelper(size, divisons, color, color));
 
-  root.invalidate()
+  root.invalidate();
 </script>

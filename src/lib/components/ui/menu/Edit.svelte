@@ -1,29 +1,29 @@
 <script context="module">
   import { Box3, Vector3 } from "three";
-  import { AddObjectCommand } from "../../commands/AddObjectCommand.js";
-  import { RemoveObjectCommand } from "../../commands/RemoveObjectCommand.js";
-  import { SetPositionCommand } from "../../commands/SetPositionCommand.js";
+  import { AddObjectCommand } from "../../../js/commands/AddObjectCommand.js";
+  import { RemoveObjectCommand } from "../../../js/commands/RemoveObjectCommand.js";
+  import { SetPositionCommand } from "../../../js/commands/SetPositionCommand.js";
 </script>
 
 <script>
   export let editor;
 
-  const history = editor.history
+  const history = editor.history;
   const colorMaps = ["map", "envMap", "emissiveMap"];
-  let undo = false
-  let redo = false
+  let undo = false;
+  let redo = false;
 
   editor.signals.historyChanged.add(() => {
     if (history.undos.length == 0) {
-      undo = false //.classList.toggle("inactive");
+      undo = false; //.classList.toggle("inactive");
     } else {
-      undo = true
+      undo = true;
     }
 
     if (history.redos.length == 0) {
-      redo = false //.classList.toggle("inactive");
+      redo = false; //.classList.toggle("inactive");
     } else {
-      redo = true
+      redo = true;
     }
   });
 
@@ -108,14 +108,14 @@
       on:click={() => {
         editor.undo();
       }}
-      class="{undo? "":"inactive"}">
+      class={undo ? "" : "inactive"}>
       <a>Undo</a>
     </li>
     <li
       on:click={() => {
         editor.redo();
       }}
-      class="{redo? "":"inactive"}">
+      class={redo ? "" : "inactive"}>
       <a>Redo</a>
     </li>
     <li on:click={clearHistory}><a>Clear History</a></li>

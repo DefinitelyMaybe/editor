@@ -176,12 +176,12 @@ function SidebarScene(editor) {
   container.add(backgroundRow);
 
   function onBackgroundChanged() {
-    signals.sceneBackgroundChanged.dispatch(
-      [backgroundType.getValue(),
+    signals.sceneBackgroundChanged.dispatch([
+      backgroundType.getValue(),
       backgroundColor.getValue(),
       backgroundTexture.getValue(),
-      backgroundEquirectangularTexture.getValue()]
-    );
+      backgroundEquirectangularTexture.getValue(),
+    ]);
   }
 
   function refreshBackgroundUI() {
@@ -226,10 +226,10 @@ function SidebarScene(editor) {
   container.add(environmentRow);
 
   function onEnvironmentChanged() {
-    signals.sceneEnvironmentChanged.dispatch(
-      [environmentType.getValue(),
-      environmentEquirectangularTexture.getValue()]
-    );
+    signals.sceneEnvironmentChanged.dispatch([
+      environmentType.getValue(),
+      environmentEquirectangularTexture.getValue(),
+    ]);
   }
 
   function refreshEnvironmentUI() {
@@ -244,23 +244,23 @@ function SidebarScene(editor) {
   // fog
 
   function onFogChanged() {
-    signals.sceneFogChanged.dispatch(
-      [fogType.getValue(),
+    signals.sceneFogChanged.dispatch([
+      fogType.getValue(),
       fogColor.getHexValue(),
       fogNear.getValue(),
       fogFar.getValue(),
-      fogDensity.getValue()]
-    );
+      fogDensity.getValue(),
+    ]);
   }
 
   function onFogSettingsChanged() {
-    signals.sceneFogSettingsChanged.dispatch(
-      [fogType.getValue(),
+    signals.sceneFogSettingsChanged.dispatch([
+      fogType.getValue(),
       fogColor.getHexValue(),
       fogNear.getValue(),
       fogFar.getValue(),
-      fogDensity.getValue()]
-    );
+      fogDensity.getValue(),
+    ]);
   }
 
   const fogTypeRow = new UIRow();
