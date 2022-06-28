@@ -7,6 +7,8 @@
   import { onMount } from "svelte";
   import * as THREE from "three";
 
+  import Menu from "$lib/components/ui/menu/Menu.svelte";
+
   import { Editor } from "$lib/js/Editor.js";
   import { Viewport } from "$lib/js/Viewport.js";
   import { Toolbar } from "$lib/js/Toolbar.js";
@@ -33,10 +35,11 @@
     window.THREE = THREE; // Expose THREE to APP Scripts and Console
 
     const viewport = Viewport(editor);
+    // viewport.addClass("hidden")
     document.body.appendChild(viewport.dom);
 
-    const toolbar = Toolbar(editor);
-    document.body.appendChild(toolbar.dom);
+    // const toolbar = Toolbar(editor);
+    // document.body.appendChild(toolbar.dom);
 
     // const script = Script(editor);
     // document.body.appendChild(script.dom);
@@ -47,11 +50,20 @@
     const sidebar = Sidebar(editor);
     document.body.appendChild(sidebar.dom);
 
-    const menubar = Menubar(editor);
-    document.body.appendChild(menubar.dom);
+    // const menubar = Menubar(editor);
+    // document.body.appendChild(menubar.dom);
+    new Menu({
+      target: document.body,
+      props: {
+        editor,
+      },
+    });
 
-    const resizer = Resizer(editor);
-    document.body.appendChild(resizer.dom);
+    // const resizer = Resizer(editor);
+    // document.body.appendChild(resizer.dom);
+
+    let isLoadingFromHash = false;
+    const hash = window.location.hash;
 
     //
 
@@ -137,9 +149,6 @@
     onWindowResize();
 
     //
-
-    let isLoadingFromHash = false;
-    const hash = window.location.hash;
 
     if (hash.slice(1, 6) === "file=") {
       const file = hash.slice(6);
