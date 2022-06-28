@@ -1,28 +1,27 @@
 <script>
-  // import File from "./Menu/File.svelte";
-  // import Avatar from "./Menu/Avatar.svelte";
-  // import Edit from "./Menu/Edit.svelte";
-  // import Add from "./Menu/Add.svelte";
-  // import Play from "./Menu/Play.svelte";
-  // import Examples from "./Menu/Examples.svelte";
-  // import View from "./Menu/View.svelte";
+  import File from "./File.svelte";
+  // import Avatar from "./Avatar.svelte";
+  import Edit from "./Edit.svelte";
+  import Add from "./Add.svelte";
+  import Play from "./Play.svelte";
+  import Examples from "./Examples.svelte";
+  import View from "./View.svelte";
   import Help from "./Help.svelte";
   import Status from "./Status.svelte";
+
+  export let editor;
 </script>
 
-<div class="navbar bg-base-100">
+<div class="navbar h-8 bg-[#111]">
   <div class="navbar-start">
-    <!-- <File />
-    <Edit />
-    <Add />
-    <Play />
-    <Examples />
-    <View /> -->
+    <File {editor} />
+    <Edit {editor} />
+    <Add {editor} />
+    <Play {editor} />
+    <Examples {editor} />
+    <View {editor} />
     <Help />
   </div>
-  <!-- <div class="navbar-center">
-    <a href="https://threejs.org/" class="btn btn-ghost normal-case text-xl">Three.js Editor</a>
-  </div> -->
   <div class="navbar-end">
     <Status />
     <!-- <button class="btn btn-ghost btn-circle">
