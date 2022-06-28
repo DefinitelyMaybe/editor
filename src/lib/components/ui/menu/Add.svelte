@@ -1,7 +1,7 @@
 <script>
   export let editor;
   import * as THREE from "three";
-  import { AddObjectCommand } from "../../commands/AddObjectCommand.js";
+  import { AddObjectCommand } from "../../../js/commands/AddObjectCommand.js";
 
   function addGroup() {
     const mesh = new THREE.Group();
@@ -253,30 +253,30 @@
   <label tabindex="0" class="btn btn-ghost"> Add </label>
   <ul
     tabindex="0"
-    class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow h-96 overflow-y-auto">
-    <li on:click="{addGroup}"><a>Group</a></li>
-    <li on:click="{addBox}"><a>Box</a></li>
-    <li on:click="{addCapsule}"><a>Capsule</a></li>
-    <li on:click="{addCircle}"><a>Circle</a></li>
-    <li on:click="{addCylinder}"><a>Cylinder</a></li>
-    <li on:click="{addDodecahedron}"><a>Dodecahedron</a></li>
-    <li on:click="{addIcosahedron}"><a>Icosahedron</a></li>
-    <li on:click="{addLathe}"><a>Lathe</a></li>
-    <li on:click="{addOctahedron}"><a>Octahedron</a></li>
-    <li on:click="{addPlane}"><a>Plane</a></li>
-    <li on:click="{addRing}"><a>Ring</a></li>
-    <li on:click="{addSphere}"><a>Sphere</a></li>
-    <li on:click="{addSprite}"><a>Sprite</a></li>
-    <li on:click="{addTetrahedron}"><a>Tetrahedron</a></li>
-    <li on:click="{addTorus}"><a>Torus</a></li>
-    <li on:click="{addTorusKnot}"><a>TorusKnot</a></li>
-    <li on:click="{addTube}"><a>Tube</a></li>
-    <li on:click="{addAmbientLight}"><a>Ambient Light</a></li>
-    <li on:click="{addDirectionalLight}"><a>Directional Light</a></li>
-    <li on:click="{addHemishpereLight}"><a>Hemishpere Light</a></li>
-    <li on:click="{addPointLight}"><a>Point Light</a></li>
-    <li on:click="{addSpotLight}"><a>Spot Light</a></li>
-    <li on:click="{addOrthographicCamera}"><a>Othrographic Camera</a></li>
-    <li on:click="{addPerspectiveCamera}"><a>Perspective Camera</a></li>
+    class="dropdown-content menu rounded-box menu-compact mt-3 h-96 w-52 overflow-y-auto bg-base-100 p-2 shadow">
+    <li on:click={addGroup}><a>Group</a></li>
+    <li on:click={addBox}><a>Box</a></li>
+    <li on:click={addCapsule}><a>Capsule</a></li>
+    <li on:click={addCircle}><a>Circle</a></li>
+    <li on:click={addCylinder}><a>Cylinder</a></li>
+    <li on:click={addDodecahedron}><a>Dodecahedron</a></li>
+    <li on:click={addIcosahedron}><a>Icosahedron</a></li>
+    <li on:click={addLathe}><a>Lathe</a></li>
+    <li on:click={addOctahedron}><a>Octahedron</a></li>
+    <li on:click={addPlane}><a>Plane</a></li>
+    <li on:click={addRing}><a>Ring</a></li>
+    <li on:click={addSphere}><a>Sphere</a></li>
+    <li on:click={addSprite}><a>Sprite</a></li>
+    <li on:click={addTetrahedron}><a>Tetrahedron</a></li>
+    <li on:click={addTorus}><a>Torus</a></li>
+    <li on:click={addTorusKnot}><a>TorusKnot</a></li>
+    <li on:click={addTube}><a>Tube</a></li>
+    <li on:click={addAmbientLight}><a>Ambient Light</a></li>
+    <li on:click={addDirectionalLight}><a>Directional Light</a></li>
+    <li on:click={addHemishpereLight}><a>Hemishpere Light</a></li>
+    <li on:click={addPointLight}><a>Point Light</a></li>
+    <li on:click={addSpotLight}><a>Spot Light</a></li>
+    <li on:click={addOrthographicCamera}><a>Othrographic Camera</a></li>
+    <li on:click={addPerspectiveCamera}><a>Perspective Camera</a></li>
   </ul>
 </div>

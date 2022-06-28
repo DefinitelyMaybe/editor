@@ -1,10 +1,11 @@
 <script>
   import * as THREE from "three";
-  import ArkanoidURL from "../../examples/arkanoid.json?url";
-  import CameraURL from "../../examples/camera.json?url";
-  import ParticlesURL from "../../examples/particles.json?url";
-  import PongURL from "../../examples/pong.json?url";
-  import ShadersURL from "../../examples/shaders.json?url";
+
+  import ArkanoidURL from "../../../examples/arkanoid.app.json?url";
+  import CameraURL from "../../../examples/camera.app.json?url";
+  import ParticlesURL from "../../../examples/particles.app.json?url";
+  import PongURL from "../../../examples/pong.app.json?url";
+  import ShadersURL from "../../../examples/shaders.app.json?url";
 
   export let editor;
   const loader = new THREE.FileLoader();
