@@ -6,16 +6,14 @@
 
   function playStop() {
     if (isPlaying === false) {
-    isPlaying = true;
-    signals.startPlayer.dispatch();
-  } else {
-    isPlaying = false;
-    signals.stopPlayer.dispatch();
-  } 
+      isPlaying = true;
+      signals.startPlayer.dispatch();
+    } else {
+      isPlaying = false;
+      signals.stopPlayer.dispatch();
+    }
   }
-
 </script>
 
-<div on:click="{playStop}">
-  <a class="btn btn-ghost normal-case">{isPlaying ? "Stop" : "Play"}</a>
-</div>
+<button class="btn btn-ghost normal-case" on:click={playStop}
+  >{isPlaying ? "Stop" : "Play"}</button>
