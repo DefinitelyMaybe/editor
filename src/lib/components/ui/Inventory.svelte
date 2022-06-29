@@ -38,8 +38,7 @@
     }
   }} />
 
-<h1>Inventory</h1>
-<div class="dropdown dropdown-right {open ? 'dropdown-open' : ''}">
+<div class="dropdown dropdown-right absolute left-0 top-1/2 {open ? 'dropdown-open' : ''}">
   <label tabindex="0" class="btn btn-ghost m-1 h-16 w-16 p-0">
     <FolderAddIcon />
   </label>
