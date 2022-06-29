@@ -8,6 +8,7 @@
   import * as THREE from "three";
 
   import Menu from "$lib/components/ui/menu/Menu.svelte";
+  // import Inventory from "$lib/components/ui/Inventory.svelte";
 
   import { Editor } from "$lib/js/Editor.js";
   import { Viewport } from "$lib/js/Viewport.js";
@@ -17,6 +18,8 @@
   import { Sidebar } from "$lib/js/Sidebar.js";
   import { Menubar } from "$lib/js/Menubar.js";
   import { Resizer } from "$lib/js/Resizer.js";
+
+  let editor;
 
   onMount(() => {
     window.URL = window.URL || window.webkitURL;
@@ -29,7 +32,7 @@
 
     //
 
-    const editor = new Editor();
+    editor = new Editor();
 
     window.editor = editor; // Expose editor to Console
     window.THREE = THREE; // Expose THREE to APP Scripts and Console
@@ -58,6 +61,13 @@
         editor,
       },
     });
+
+    // new Inventory({
+    //   target: document.body,
+    //   props: {
+    //     editor,
+    //   },
+    // });
 
     // const resizer = Resizer(editor);
     // document.body.appendChild(resizer.dom);
@@ -119,34 +129,8 @@
       signals.historyChanged.add(saveState);
     });
 
-    //
-
-    document.addEventListener("dragover", function (event) {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = "copy";
-    });
-
-    document.addEventListener("drop", function (event) {
-      event.preventDefault();
-
-      if (event.dataTransfer.types[0] === "text/plain") return; // Outliner drop
-
-      if (event.dataTransfer.items) {
-        // DataTransferItemList supports folders
-
-        editor.loader.loadItemList(event.dataTransfer.items);
-      } else {
-        editor.loader.loadFiles(event.dataTransfer.files);
-      }
-    });
-
-    function onWindowResize() {
-      editor.signals.windowResize.dispatch();
-    }
-
-    window.addEventListener("resize", onWindowResize);
-
-    onWindowResize();
+    // resize onmount
+    editor.signals.windowResize.dispatch();
 
     //
 
@@ -181,3 +165,24 @@
   <title>three.js editor | remake</title>
   <meta name="description" content="A SvelteKit app" />
 </svelte:head>
+
+<svelte:window
+  on:resize={() => {
+    editor.signals.windowResize.dispatch();
+  }} />
+
+<svelte:body
+  on:dragover|preventDefault={(event) => {
+    event.dataTransfer.dropEffect = "copy";
+  }}
+  on:drop|preventDefault={(event) => {
+    if (event.dataTransfer.types[0] === "text/plain") return; // Outliner drop
+
+    if (event.dataTransfer.items) {
+      // DataTransferItemList supports folders
+
+      editor.loader.loadItemList(event.dataTransfer.items);
+    } else {
+      editor.loader.loadFiles(event.dataTransfer.files);
+    }
+  }} />
