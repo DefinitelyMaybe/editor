@@ -43,7 +43,7 @@
 
 <svelte:body on:keypress={handleKeyPress} />
 
-<div class="pointer-events-auto flex">
+<div class="pointer-events-auto absolute bottom-0">
   <button
     class="btn m-1 h-20 w-20 {active === 1 ? 'btn-primary' : ''}"
     on:dragover|preventDefault
