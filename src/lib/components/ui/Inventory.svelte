@@ -2,6 +2,14 @@
   import * as SC from "$lib/index.js";
   import * as THREE from "three";
   import { FolderAddIcon } from "@rgossiaux/svelte-heroicons/outline";
+  import { AddObjectCommand } from "../../js/commands/AddObjectCommand.js";
+
+  export let editor
+  let signals
+
+  $: if (editor) {
+    signals = editor.signals
+  }
 
   let colour = "#735f59";
   let open = false;
@@ -50,7 +58,13 @@
         on:dragstart={(event) => {
           handleDragStart(event, "box");
         }}>
-        <SC.Canvas antialias alpha>
+        <SC.Canvas antialias alpha on:click="{()=> {
+          const geometry = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
+          const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial());
+          mesh.name = "Box";
+
+          editor.execute(new AddObjectCommand(editor, mesh));
+        }}">
           <SC.PerspectiveCamera position={[2, 2, 4]} />
           <!-- <SC.OrbitControls enableZoom={true} maxPolarAngle={Math.PI * 0.51} /> -->
           <SC.Mesh
