@@ -2,6 +2,7 @@
   import { XIcon, CubeIcon } from "@rgossiaux/svelte-heroicons/outline";
   import { createEventDispatcher } from "svelte";
 
+  export let editor
   const dispatch = createEventDispatcher();
 
   let active = 0;
