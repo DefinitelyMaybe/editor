@@ -48,8 +48,8 @@
     // const script = Script(editor);
     // document.body.appendChild(script.dom);
 
-    const player = Player(editor);
-    document.body.appendChild(player.dom);
+    // const player = Player(editor);
+    // document.body.appendChild(player.dom);
 
     const sidebar = Sidebar(editor);
     document.body.appendChild(sidebar.dom);
@@ -60,6 +60,9 @@
       target: document.body,
       props: {
         editor,
+        dev: {
+          viewport
+        }
       },
     });
 
