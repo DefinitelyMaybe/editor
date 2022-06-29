@@ -5,11 +5,7 @@
   import { AddObjectCommand } from "../../js/commands/AddObjectCommand.js";
 
   export let editor
-  let signals
-
-  $: if (editor) {
-    signals = editor.signals
-  }
+  const signals = editor.signals
 
   let colour = "#735f59";
   let open = false;
