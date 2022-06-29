@@ -8,7 +8,8 @@
   import * as THREE from "three";
 
   import Menu from "$lib/components/ui/menu/Menu.svelte";
-  // import Inventory from "$lib/components/ui/Inventory.svelte";
+  import Inventory from "$lib/components/ui/Inventory.svelte";
+  import ActionBar from "$lib/components/ui/actionbar/ActionBar.svelte";
 
   import { Editor } from "$lib/js/Editor.js";
   import { Viewport } from "$lib/js/Viewport.js";
@@ -62,12 +63,19 @@
       },
     });
 
-    // new Inventory({
-    //   target: document.body,
-    //   props: {
-    //     editor,
-    //   },
-    // });
+    new Inventory({
+      target: document.body,
+      props: {
+        editor,
+      },
+    });
+
+    new ActionBar({
+      target: document.body,
+      props: {
+        editor,
+      },
+    });
 
     // const resizer = Resizer(editor);
     // document.body.appendChild(resizer.dom);
