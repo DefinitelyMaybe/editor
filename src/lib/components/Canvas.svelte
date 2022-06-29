@@ -233,6 +233,7 @@
     on:pointerdown
     on:pointerup
     on:pointermove
+    on:click
     bind:this={root.canvas} />
 
   {#if root.scene}
