@@ -3,13 +3,15 @@
   // import Avatar from "./Avatar.svelte";
   import Edit from "./Edit.svelte";
   import Add from "./Add.svelte";
-  import Play from "./Play.svelte";
+  import Play from "./Run.svelte";
   import Examples from "./Examples.svelte";
   import View from "./View.svelte";
   import Help from "./Help.svelte";
   import Status from "./Status.svelte";
+  import Dev from "./Dev.svelte";
 
   export let editor;
+  export let dev;
 </script>
 
 <div class="navbar h-8 bg-[#111]">
@@ -19,8 +21,9 @@
     <Add {editor} />
     <Play {editor} />
     <Examples {editor} />
-    <View {editor} />
+    <View />
     <Help />
+    <Dev {editor} {dev}/>
   </div>
   <div class="navbar-end">
     <Status />
